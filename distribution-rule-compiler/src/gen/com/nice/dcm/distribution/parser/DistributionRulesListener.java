@@ -28,6 +28,16 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 */
 	void exitRule(DistributionRulesParser.RuleContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#ruleAction}.
+	 * @param ctx the parse tree
+	 */
+	void enterRuleAction(DistributionRulesParser.RuleActionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#ruleAction}.
+	 * @param ctx the parse tree
+	 */
+	void exitRuleAction(DistributionRulesParser.RuleActionContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#skills}.
 	 * @param ctx the parse tree
 	 */
@@ -57,4 +67,24 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitEntity_identifier(DistributionRulesParser.Entity_identifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#order}.
+	 * @param ctx the parse tree
+	 */
+	void enterOrder(DistributionRulesParser.OrderContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#order}.
+	 * @param ctx the parse tree
+	 */
+	void exitOrder(DistributionRulesParser.OrderContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#waitRule}.
+	 * @param ctx the parse tree
+	 */
+	void enterWaitRule(DistributionRulesParser.WaitRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#waitRule}.
+	 * @param ctx the parse tree
+	 */
+	void exitWaitRule(DistributionRulesParser.WaitRuleContext ctx);
 }

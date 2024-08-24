@@ -23,6 +23,12 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRule(DistributionRulesParser.RuleContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#ruleAction}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRuleAction(DistributionRulesParser.RuleActionContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#skills}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -40,4 +46,16 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitEntity_identifier(DistributionRulesParser.Entity_identifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#order}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOrder(DistributionRulesParser.OrderContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#waitRule}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWaitRule(DistributionRulesParser.WaitRuleContext ctx);
 }

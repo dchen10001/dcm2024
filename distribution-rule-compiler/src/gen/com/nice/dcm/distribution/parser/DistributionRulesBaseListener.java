@@ -41,6 +41,18 @@ public class DistributionRulesBaseListener implements DistributionRulesListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterRuleAction(DistributionRulesParser.RuleActionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRuleAction(DistributionRulesParser.RuleActionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSkills(DistributionRulesParser.SkillsContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -72,6 +84,30 @@ public class DistributionRulesBaseListener implements DistributionRulesListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitEntity_identifier(DistributionRulesParser.Entity_identifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOrder(DistributionRulesParser.OrderContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOrder(DistributionRulesParser.OrderContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterWaitRule(DistributionRulesParser.WaitRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWaitRule(DistributionRulesParser.WaitRuleContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
