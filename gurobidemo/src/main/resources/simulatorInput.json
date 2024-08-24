@@ -1,0 +1,81 @@
+{
+  "problemId" : "2376094a-fd33-4573-9e26-758c74269469",
+  "version" : "1.0",
+  "simulationParameter" : {
+    "intervalLength" : "PT15H",
+    "startDateTime" : "2022-02-07T00:00:00Z",
+    "endDateTime" : "2022-02-07T01:00:00Z",
+    "skillLevel" : "ONE_IS_HIGHEST_LEVEL"
+  },
+  "employees" : [ {
+    "oid" : "oid",
+    "id" : 1,
+    "name" : "employeeName",
+    "skills" : [ {
+      "skillOid" : "skillOid",
+      "level" : 10
+    } ]
+  } ],
+  "skills" : [ {
+    "oid" : "oid",
+    "id" : 1,
+    "name" : "skillName"
+  } ],
+  "contactTypes" : [ {
+    "oid" : "oid",
+    "id" : 1,
+    "name" : "contactName",
+    "intervals" : [ {
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z",
+      "callVolume" : 100.0,
+      "avgHandleTime" : 300.0,
+      "avgAbandonedTime" : 600.000000000
+    } ],
+    "defaultDistributionName" : "defaultDistributionName",
+    "defaultDistributionScript" : "queue to @S:0000-0000-0000-0001 with priority 1",
+    "distributionScriptsByPeriods" : [ {
+      "name" : "ruleName",
+      "distributionScript" : "queue to @S:1111-0000-0000-0001 with priority 1",
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z"
+    } ],
+    "defaultServiceTarget" : {
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z",
+      "serviceLevelPercent" : 0.85,
+      "serviceLevelDuration" : 28800.000000000,
+      "asaDuration" : 14400.000000000
+    },
+    "serviceTargetsByPeriods" : [ {
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z",
+      "serviceLevelPercent" : 0.85,
+      "serviceLevelDuration" : 28800.000000000,
+      "asaDuration" : 14400.000000000
+    } ]
+  } ],
+  "activityCodes" : [ {
+    "oid" : "oid",
+    "id" : 1,
+    "name" : "activityCodeName",
+    "open" : false
+  } ],
+  "employeeSchedules" : [ {
+    "employeeOid" : "employeeOid",
+    "shifts" : [ {
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z",
+      "activities" : [ {
+        "activityCodeOid" : "activityCodeOid",
+        "startDateTime" : "2022-02-07T00:00:00Z",
+        "endDateTime" : "2022-02-07T01:00:00Z"
+      } ]
+    } ],
+    "activities" : [ {
+      "activityCodeOid" : "activityCodeOid",
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z"
+    } ]
+  } ]
+}

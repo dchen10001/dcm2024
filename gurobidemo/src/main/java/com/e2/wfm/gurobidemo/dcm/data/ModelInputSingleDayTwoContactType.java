@@ -55,6 +55,8 @@ public class ModelInputSingleDayTwoContactType extends ModelInputConstant {
     
     private int[][] schedulesRule0;
     private int[][] schedulesRule1;
+    
+    //groupId, dailyRule, selection
     private Map<Long, Map<Short, Selection>> selections = new HashMap<>();
     private int iteration = 0;
     
@@ -64,7 +66,7 @@ public class ModelInputSingleDayTwoContactType extends ModelInputConstant {
     }
     
     protected int getNumOfDays() {
-	return 1;
+    	return 1;
     }
 
     public DCMModelInput createModelInput(int maxIteration) {
@@ -81,18 +83,18 @@ public class ModelInputSingleDayTwoContactType extends ModelInputConstant {
 	return new DCMModelInput(skillGroups, schedulingUnits, contactTypes, employees);
     }
     
-    private List<ContactType> createContactTypes(int interval) {
-	double[] requirements1 = new double[interval];
-	for (int i = 28; i < 76; i++) {
-	    requirements1[i] = requriement0;
+	private List<ContactType> createContactTypes(int interval) {
+		double[] requirements1 = new double[interval];
+		for (int i = 28; i < 76; i++) {
+			requirements1[i] = requriement0;
+		}
+
+		double[] requirements2 = new double[interval];
+		for (int i = 28; i < 76; i++) {
+			requirements2[i] = requriement1;
+		}
+		return List.of(new ContactType(0, requirements1), new ContactType(1, requirements2));
 	}
-	
-	double[] requirements2 = new double[interval];
-	for (int i = 28; i < 76; i++) {
-	    requirements2[i] = requriement1;
-	}
-	return List.of(new ContactType(0, requirements1), new ContactType(1, requirements2));
-    }
 
     private List<SkillGroup> createSkillGroups(List<ContactType> contactTypes) {
 	List<SkillGroup> skillGroups = new ArrayList<>();
@@ -135,22 +137,23 @@ public class ModelInputSingleDayTwoContactType extends ModelInputConstant {
 
 
     
-    private List<Employee> createEmployees(List<SkillGroup> skillGroups, int maxIteration) {
-	List<Employee> employees = new ArrayList<>();
-	for (SkillGroup skillGroup : skillGroups) {
-	    long groupId = skillGroup.getId();
-	    Map<Short, Selection> groupSelections = selections.computeIfAbsent(groupId, f -> new HashMap<>());
-	    for (int i = 0; i < empNumPerSkillGroup; i++) {
-		long empId = empNumPerSkillGroup * groupId + i;
-		short dailyRule = (short) (empId % 2);	
-		Selection selection = groupSelections.computeIfAbsent(dailyRule, f -> new Selection(groupId, dailyRule, selectSchedule(dailyRule), 0, maxIteration));
-		int[] schedule = selection.getSchedule(0);
-		skillGroup.addEmployee(new Employee(empId, groupId, 0, schedule));
-	    }
-	    employees.addAll(skillGroup.getEmployees());
+	private List<Employee> createEmployees(List<SkillGroup> skillGroups, int maxIteration) {
+		List<Employee> employees = new ArrayList<>();
+		for (SkillGroup skillGroup : skillGroups) {
+			long groupId = skillGroup.getId();
+			Map<Short, Selection> groupSelections = selections.computeIfAbsent(groupId, f -> new HashMap<>());
+			for (int i = 0; i < empNumPerSkillGroup; i++) {
+				long empId = empNumPerSkillGroup * groupId + i;
+				short dailyRule = (short) (empId % 2);
+				Selection selection = groupSelections.computeIfAbsent(dailyRule,
+						f -> new Selection(groupId, dailyRule, selectSchedule(dailyRule), 0, maxIteration));
+				int[] schedule = selection.getSchedule(0);
+				skillGroup.addEmployee(new Employee(empId, groupId, 0, schedule));
+			}
+			employees.addAll(skillGroup.getEmployees());
+		}
+		return employees;
 	}
-	return employees;
-    }
     
     private int[][] selectSchedule(short dailyRule) {
 	switch(dailyRule) {
@@ -163,37 +166,37 @@ public class ModelInputSingleDayTwoContactType extends ModelInputConstant {
 	}
     }
     
-    public List<EmployeeSchedule> getBeseSchedules(DCMModelOutput modelOutput, List<Employee> employees) {
-	iteration++;
-	
-	SkillGroupValue[] skillGroupValues = modelOutput.getGroupValues();
-	List<EmployeeSchedule> employeeSchedules = new ArrayList<>();
-	
-	for(Employee employee : employees) {
-	    long empId = employee.getId();
-	    short ruleId = (short) (empId % 2);
-	    long groupId = employee.getSkillGroupId();
-	    
-	    Selection selection = getIndexOfRule(groupId, (short) ruleId);
-	    int index = selection.getIndex(iteration);
-	    
-	    int[] schedule = null;
-	    if(index > 0) {
-		schedule = selection.getSchedule(index);
-	    } else {
-		SkillGroupValue skillGroupValue = skillGroupValues[(int) groupId];
-		double[] dualValues = skillGroupValue.getDualValues();
-		index = getBestSchedule(dualValues, selection);
-		selection.addIndex(iteration, index);
-		schedule = selection.getSchedule(index);
-	    }
-	    
-	    if(schedule.length > 0 ) {
-		employeeSchedules.add(new EmployeeSchedule(empId, groupId, schedule));
-	    }
+	public List<EmployeeSchedule> getBeseSchedules(DCMModelOutput modelOutput, List<Employee> employees) {
+		iteration++;
+
+		SkillGroupValue[] skillGroupValues = modelOutput.getGroupValues();
+		List<EmployeeSchedule> employeeSchedules = new ArrayList<>();
+
+		for (Employee employee : employees) {
+			long empId = employee.getId();
+			short ruleId = (short) (empId % 2);
+			long groupId = employee.getSkillGroupId();
+
+			Selection selection = getIndexOfRule(groupId, (short) ruleId);
+			int index = selection.getIndex(iteration);
+
+			int[] schedule = null;
+			if (index > 0) {
+				schedule = selection.getSchedule(index);
+			} else {
+				SkillGroupValue skillGroupValue = skillGroupValues[(int) groupId];
+				double[] dualValues = skillGroupValue.getDualValues();
+				index = getBestSchedule(dualValues, selection);
+				selection.addIndex(iteration, index);
+				schedule = selection.getSchedule(index);
+			}
+
+			if (schedule.length > 0) {
+				employeeSchedules.add(new EmployeeSchedule(empId, groupId, schedule));
+			}
+		}
+		return employeeSchedules;
 	}
-	return employeeSchedules;
-    }
     
     private int getBestSchedule(double[] dualValues, Selection selection) {
 	int[][] schedules = selection.getSchedules();

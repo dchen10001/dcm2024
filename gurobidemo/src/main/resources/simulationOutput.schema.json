@@ -1,0 +1,19 @@
+{
+  "problemId" : "string",
+  "version" : "string",
+  "simulationParameter" : {
+    "intervalLength" : "integer",
+    "startDateTime" : "OffsetDateTime",
+    "endDateTime" : "OffsetDateTime",
+    "skillLevel" : "string[ONE_IS_HIGHEST_LEVEL|ONE_IS_LOWEST_LEVEL]"
+  },
+  "metrics" : [ {
+    "contactTypeOid" : "contactTypeOid",
+    "intervals" : [ {
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime",
+      "serviceLevelPct" : "Double",
+      "averageSpeedOfAnswer" : "double"
+    } ]
+  } ]
+}

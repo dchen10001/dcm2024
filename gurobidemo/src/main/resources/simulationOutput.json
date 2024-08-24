@@ -1,0 +1,19 @@
+{
+  "problemId" : "fd71fa34-d740-4d76-8c26-e6341769cd5e",
+  "version" : "1.0",
+  "simulationParameter" : {
+    "intervalLength" : 900,
+    "startDateTime" : "2022-02-07T00:00:00Z",
+    "endDateTime" : "2022-02-07T01:00:00Z",
+    "skillLevel" : "ONE_IS_HIGHEST_LEVEL"
+  },
+  "metrics" : [ {
+    "contactTypeOid" : "contactTypeOid",
+    "intervals" : [ {
+      "startDateTime" : "2022-02-07T00:00:00Z",
+      "endDateTime" : "2022-02-07T01:00:00Z",
+      "serviceLevelPct" : null,
+      "averageSpeedOfAnswer" : 11.0
+    } ]
+  } ]
+}

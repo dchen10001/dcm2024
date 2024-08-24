@@ -1,0 +1,367 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Simulation Problem Schema",
+  "description": "Schema definition for a simulation problem including parameters, employees, skills, contact types, activity codes, and employee schedules.",
+  "type": "object",
+  "properties": {
+    "problemId": {
+      "type": "string",
+      "description": "Unique identifier for the simulation problem."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the simulation problem definition."
+    },
+    "simulationParameter": {
+      "type": "object",
+      "description": "Parameters for running the simulation.",
+      "properties": {
+        "intervalLength": {
+          "type": "integer",
+          "description": "Length of the interval in which the simulation runs. Java Type: Duration"
+        },
+        "startDateTime": {
+          "type": "string",
+          "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+          "description": "Start date and time for the simulation. Java Type: OffsetDateTime"
+        },
+        "endDateTime": {
+          "type": "string",
+          "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+          "description": "End date and time for the simulation. Java Type: OffsetDateTime"
+        },
+        "skillLevel": {
+          "type": "string",
+          "description": "Defines the skill level rating system used in the simulation. Java Type: Enum",
+          "enum": [
+            "ONE_IS_HIGHEST_LEVEL",
+            "ONE_IS_LOWEST_LEVEL"
+          ]
+        }
+      },
+      "required": ["intervalLength", "startDateTime", "endDateTime", "skillLevel"]
+    },
+    "employees": {
+      "type": "array",
+      "description": "List of employees involved in the simulation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "oid": {
+            "type": "string",
+            "description": "Unique object identifier for the employee."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Employee ID number."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the employee."
+          },
+          "skills": {
+            "type": "array",
+            "description": "Skills possessed by the employee.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "skillOid": {
+                  "type": "string",
+                  "description": "Unique object identifier for the skill."
+                },
+                "level": {
+                  "type": "integer",
+                  "description": "Skill level of the employee."
+                }
+              },
+              "required": ["skillOid", "level"]
+            }
+          }
+        },
+        "required": ["oid", "id", "name", "skills"]
+      }
+    },
+    "skills": {
+      "type": "array",
+      "description": "List of skills defined in the simulation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "oid": {
+            "type": "string",
+            "description": "Unique object identifier for the skill."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Skill ID number."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the skill."
+          }
+        },
+        "required": ["oid", "id", "name"]
+      }
+    },
+    "contactTypes": {
+      "type": "array",
+      "description": "List of contact types used in the simulation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "oid": {
+            "type": "string",
+            "description": "Unique object identifier for the contact type."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Contact type ID number."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the contact type."
+          },
+          "intervals": {
+            "type": "array",
+            "description": "Time intervals associated with the contact type.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "startDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "Start date and time for the interval. Java Type: OffsetDateTime"
+                },
+                "endDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "End date and time for the interval. Java Type: OffsetDateTime"
+                },
+                "callVolume": {
+                  "type": "number",
+                  "description": "Expected call volume during the interval. Java Type: double"
+                },
+                "avgHandleTime": {
+                  "type": "number",
+                  "description": "Average handle time per call during the interval. Java Type: double"
+                },
+                "avgAbandonedTime": {
+                  "type": "integer",
+                  "description": "Average abandoned time per call during the interval. Java Type: Duration"
+                }
+              },
+              "required": ["startDateTime", "endDateTime", "callVolume", "avgHandleTime", "avgAbandonedTime"]
+            }
+          },
+          "defaultDistributionName": {
+            "type": "string",
+            "description": "Default distribution name used for this contact type."
+          },
+          "defaultDistributionScript": {
+            "type": "string",
+            "description": "Default distribution script used for this contact type."
+          },
+          "distributionScriptsByPeriods": {
+            "type": "array",
+            "description": "Distribution scripts applied during specific periods.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the distribution script."
+                },
+                "distributionScript": {
+                  "type": "string",
+                  "description": "Script used for distribution during the period."
+                },
+                "startDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "Start date and time for the distribution script period. Java Type: OffsetDateTime"
+                },
+                "endDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "End date and time for the distribution script period. Java Type: OffsetDateTime"
+                }
+              },
+              "required": ["name", "distributionScript", "startDateTime", "endDateTime"]
+            }
+          },
+          "defaultServiceTarget": {
+            "type": "object",
+            "description": "Default service targets for the contact type.",
+            "properties": {
+              "startDateTime": {
+                "type": "string",
+                "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                "description": "Start date and time for the service target. Java Type: OffsetDateTime"
+              },
+              "endDateTime": {
+                "type": "string",
+                "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                "description": "End date and time for the service target."
+              },
+              "serviceLevelPercent": {
+                "type": "number",
+                "description": "Service level percentage goal. It can be null. Java Type: Double"
+              },
+              "serviceLevelDuration": {
+                "type": "integer",
+                "description": "Service level duration goal. Java Type: Duration"
+              },
+              "asaDuration": {
+                "type": "integer",
+                "description": "Average speed of answer duration goal. Java Type: Duration"
+              }
+            },
+            "required": ["startDateTime", "endDateTime", "serviceLevelDuration", "asaDuration"]
+          },
+          "serviceTargetsByPeriods": {
+            "type": "array",
+            "description": "Service targets defined for specific periods.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "startDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "Start date and time for the service target period. Java Type: OffsetDateTime"
+                },
+                "endDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "End date and time for the service target period. Java Type: OffsetDateTime"
+                },
+                "serviceLevelPercent": {
+                  "type": "number",
+                  "description": "Service level percentage goal for the period. Java Type: Double"
+                },
+                "serviceLevelDuration": {
+                  "type": "string",
+                  "description": "Service level duration goal for the period. Java Type: Duration"
+                },
+                "asaDuration": {
+                  "type": "string",
+                  "description": "Average speed of answer duration goal for the period. Java Type: Duration"
+                }
+              },
+              "required": ["startDateTime", "endDateTime", "serviceLevelDuration", "asaDuration"]
+            }
+          }
+        },
+        "required": ["oid", "id", "name", "intervals", "defaultDistributionName", "defaultDistributionScript", "distributionScriptsByPeriods", "defaultServiceTarget", "serviceTargetsByPeriods"]
+      }
+    },
+    "activityCodes": {
+      "type": "array",
+      "description": "List of activity codes used in the simulation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "oid": {
+            "type": "string",
+            "description": "Unique object identifier for the activity code."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Activity code ID number."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the activity code."
+          },
+          "open": {
+            "type": "boolean",
+            "description": "Indicates whether the activity code is open."
+          }
+        },
+        "required": ["oid", "id", "name", "open"]
+      }
+    },
+    "employeeSchedules": {
+      "type": "array",
+      "description": "List of employee schedules defined for the simulation.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "employeeOid": {
+            "type": "string",
+            "description": "Unique object identifier for the employee."
+          },
+          "shifts": {
+            "type": "array",
+            "description": "List of shifts assigned to the employee.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "startDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "Start date and time of the shift. Java Type: OffsetDateTime"
+                },
+                "endDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "End date and time of the shift. Java Type: OffsetDateTime"
+                },
+                "activities": {
+                  "type": "array",
+                  "description": "Activities performed during the shift.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "activityCodeOid": {
+                        "type": "string",
+                        "description": "Unique object identifier for the activity code."
+                      },
+                      "startDateTime": {
+                        "type": "string",
+                        "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                        "description": "Start date and time of the activity. Java Type: OffsetDateTime"
+                      },
+                      "endDateTime": {
+                        "type": "string",
+                        "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                        "description": "End date and time of the activity."
+                      }
+                    },
+                    "required": ["activityCodeOid", "startDateTime", "endDateTime"]
+                  }
+                }
+              },
+              "required": ["startDateTime", "endDateTime", "activities"]
+            }
+          },
+          "activities": {
+            "type": "array",
+            "description": "Additional activities assigned outside of shifts.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "activityCodeOid": {
+                  "type": "string",
+                  "description": "Unique object identifier for the activity code."
+                },
+                "startDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "Start date and time of the activity. Java Type: OffsetDateTime"
+                },
+                "endDateTime": {
+                  "type": "string",
+                  "format": "yyyy-MM-dd'T'HH:mm:ss'Z'",
+                  "description": "End date and time of the activity. Java Type: OffsetDateTime"
+                }
+              },
+              "required": ["activityCodeOid", "startDateTime", "endDateTime"]
+            }
+          }
+        },
+        "required": ["employeeOid", "shifts", "activities"]
+      }
+    }
+  },
+  "required": ["problemId", "version", "simulationParameter", "employees", "skills", "contactTypes", "activityCodes", "employeeSchedules"]
+}

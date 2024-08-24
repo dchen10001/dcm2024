@@ -1,0 +1,81 @@
+{
+  "problemId" : "string",
+  "version" : "string",
+  "simulationParameter" : {
+    "intervalLength" : "Duration",
+    "startDateTime" : "OffsetDateTime",
+    "endDateTime" : "OffsetDateTime",
+    "skillLevel" : "string[ONE_IS_HIGHEST_LEVEL|ONE_IS_LOWEST_LEVEL]"
+  },
+  "employees" : [ {
+    "oid" : "string",
+    "id" : "integer",
+    "name" : "string",
+    "skills" : [ {
+      "skillOid" : "string",
+      "level" : "integer"
+    } ]
+  } ],
+  "skills" : [ {
+    "oid" : "string",
+    "id" : "integer",
+    "name" : "string"
+  } ],
+  "contactTypes" : [ {
+    "oid" : "string",
+    "id" : "integer",
+    "name" : "string",
+    "intervals" : [ {
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime",
+      "callVolume" : "double",
+      "avgHandleTime" : "double",
+      "avgAbandonedTime" : "Duration"
+    } ],
+    "defaultDistributionName" : "string",
+    "defaultDistributionScript" : "string",
+    "distributionScriptsByPeriods" : [ {
+      "name" : "string",
+      "distributionScript" : "string",
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime"
+    } ],
+    "defaultServiceTarget" : {
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime",
+      "serviceLevelPercent" : "Double",
+      "serviceLevelDuration" : "Duration",
+      "asaDuration" : "Duration"
+    },
+    "serviceTargetsByPeriods" : [ {
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime",
+      "serviceLevelPercent" : "Double",
+      "serviceLevelDuration" : "Duration",
+      "asaDuration" : "Duration"
+    } ]
+  } ],
+  "activityCodes" : [ {
+    "oid" : "string",
+    "id" : "integer",
+    "name" : "string",
+    "open" : false
+  } ],
+  "employeeSchedules" : [ {
+    "employeeOid" : "string",
+    "shifts" : [ {
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime",
+      "activities" : [ {
+        "activityCodeOid" : "string",
+        "startDateTime" : "OffsetDateTime",
+        "endDateTime" : "OffsetDateTime"
+      } ]
+    } ],
+    "activities" : [ {
+      "activityCodeOid" : "string",
+      "startDateTime" : "OffsetDateTime",
+      "endDateTime" : "OffsetDateTime"
+    } ]
+  } ]
+}

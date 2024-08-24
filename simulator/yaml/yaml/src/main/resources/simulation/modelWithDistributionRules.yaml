@@ -1,0 +1,799 @@
+  #Distributions
+- Distribution:
+    Name: agentMultiDistribution
+    Description: details needed for building an agent
+    Type: registry
+- Distribution:
+    Name: contactMultiDistributionExternal
+    Description: details needed for building an contacts externally
+    Type: registry
+- Distribution:
+    Name: contactsMultiDistribution
+    Description: details needed for building contacts
+    Type: spread
+    StartName: start
+    VolumeName: offeredCalls
+    LengthName: intervalInSeconds
+    Distribution: contactMultiDistributionExternal
+    Method: EQUAL
+- Distribution:
+    Name: contactPriorityDistribution
+    Description: priority of contacts
+    Type: Constant
+    value: 1
+  #Comparators
+- Comparator:
+    Name: availableAgentsComparator
+    Type: registry
+- Comparator:
+    Name: availableContactsComparator
+    Type: registry
+- Comparator:
+    Name: skillLevelComparator
+    Type: registry
+  #Values
+- Value:
+    Name: skillsFilterField
+    Type: registry
+- Value:
+    Name: intervalInMinutes
+    Type: registry
+  #ExternalAction
+- ExternalAction:
+    Name: distributeContact
+    Description: distribute Contact by running relevant script per contactType(CT) attribute enqueue contact
+    Key-1: contactType
+    Type-1: string
+    Key-2: availableAgentsQueueTemplate
+    Type-2: number
+    Key-3: map
+    Type-3: 
+      item1: test1
+      item2: test2
+      item3: test3
+- ExternalAction:
+    Name: moveAgentToRelevantAvailableQueues
+    Description: remove agent from all available agents queue beside skills of next interval
+    Key-1: nextSkillIntervalListView
+    Type-1: string
+    Key-2: availableAgentsQueueTemplate
+    Type-2: string
+- ExternalAction:
+    Name: populateAvailableAgents
+    Description: populate agent to all available agents queue
+    Key-1: nextSkillIntervalListView
+    Type-1: string
+    Key-2: availableAgentsQueueTemplate
+    Type-2: string
+- ExternalAction:
+    Name: removeAvailableAgents
+    Description: remove agent from all available agents queue
+    Key-1: nextSkillIntervalListView
+    Type-1: string
+    Key-2: availableAgentsQueueTemplate
+    Type-2: string
+- ExternalAction:
+    Name: registerNewSubQueueAction
+    Description: what to do when there is a new sub-queue created
+    Key: allAvailableAgentsQueueName
+    Type: string
+    Key-1: agentQueueTemplateName
+    Type-1: string
+    Key-2: newQueueNameTemplate
+    Type-2: string
+    Key-3: filterAttributeName
+    Type-3: string
+- ExternalAction:
+    Name: registerEWTAction
+    Description: add support for EWT
+    Key: allAgentsQueueName
+    Type: string
+    Key-1: allContactsQueueName
+    Type-1: string
+    Key-2: contactTypeAttribute
+    Type-2: string
+    Key-3: queuedToAttribute
+    Type-3: string
+- ExternalAction:
+    Name: updateEWT
+    Description: record data for EWT
+    Key-1: source
+    Type-1: string
+    Key-2: queuedToAttribute
+    Type-2: string
+    Key-3: contactBirthTime
+    Type-3: number
+- ExternalAction:
+    Name: invalidateEWTCache
+    Description: invalidate cache for EWT, since the environment changed
+    Key-1: cacheType
+    Type-1: string
+- ExternalAction:
+    Name: abort
+    Description: stop script, used when start to process the Contact. Assumes that Contact (optionally) points to Container
+    Key-1: containerField
+    Type-1: string
+    Key-2: entity
+    Type-2: string
+- ExternalAction:
+    Name: recordTimeOnForAllSkills
+    Description: given a string parameter of all relevant skills - record time on an agent attribute for all skills
+    Key-1: skillsAsString
+    Type-1: string
+    Key-2: agentAttributePrefix
+    Type-2: string
+    Key-3: agentAttributeSuffix
+    Type-3: string
+- ExternalAction:
+    Name: updateRunTimeMetricAction
+    Description: update moving windows metrics on contact
+    Key-1: creationTimeAttributeName
+    Type-1: string
+    Key-2: ctAttributeName
+    Type-2: string
+    Key-3: source
+    Type-3: string
+- ExternalAction:
+    Name: recordMatch
+    Description: collect data about which contacts were assigned/matched to which Agents. This helps us improve our analysis of how improve the scheduling
+    Key-1: contactType
+    Type-1: string
+- ExternalAction:
+    Name: registerMaxIntervalQueueSize
+    Description: record maximum queue size per interval
+    Key-1: queueName
+    Type-1: string
+  #Queues
+- Template:
+    Name: availableAgentsWithSkillQueueTemplate
+    Template:
+      Queue:
+        Description: track agents, who can accept more work
+        Contains: Agent
+        periodMinutes:
+          Value: intervalInMinutes
+        Comparator: availableAgentsComparator
+        Attributes:
+          - name: queueSkill
+            type: constant
+            initValue:
+              Value: <nameVar>
+          - name: queueSkillId
+            type: constant
+            initValue:
+              Value: queueSkillId
+        Events:
+          notifyContactAvailableCheckForAgentToHandle:
+            Source: self
+            Action:
+              say: handling notifyContactAvailableCheckForAgentToHandle <entity:name> - check if can handle any available agent (try to get from availableAgentsWithSkillQueue)
+              queueContains:
+                name: availableContactsQueue
+                Action:
+                  queueGet:
+                    Filter:
+                      Value: skillsFilterField
+
+                    Action:
+                      say: going to check if there is a more suitable contact to handle than <event:name> by agent <entity:name>
+                      queuePut:
+                        entity: entity
+                      send Event:
+                        notifyAgentAvailableCheckForContactToBeHandledFromContactAvailable:
+                          target: eventQueue
+          notifyContactAvailableCheckForAgentToHandleByAgentAvailableTrigger:
+            Action:
+              say: handling notifyContactAvailableCheckForAgentToHandleByAgentAvailableTrigger <entity:name> - check if can handle any available agent (try to get from availableAgentsWithSkillQueue)
+              queueContains:
+                name: <queue:name>
+                Action:
+                  queueGet:
+                    name: availableContactsQueue
+                    Filter:
+                      Value: skillsFilterField
+                    Action:
+                      say: agent <event:name> handling contact <entity:name> - manage to take an agent from availableAgentsWithSkillQueue1
+                      increment:
+                          source: event
+                          attribute: processedContacts
+                      increment-2:
+                        source: event
+                        attribute: processedContactsContactFoundAgent
+                      recordTimeOnForAllSkills:
+                        skillsAsString: <owner:attribute:queueSkillId>
+                        agentAttributePrefix: agent.agentSkillsByUse
+                        agentAttributeSuffix: lastTimeSkillWasUsed
+#                      recordTime:
+#                        Source: event
+#                        Attribute: <event:attribute:agent.agentSkillsByUse[<queue:attribute:queueSkillId>].lastTimeSkillWasUsed>
+#                      queueMove:
+#                        entity: entity
+#                        source: availableContactsQueue
+#                        target: beingProcessedContactsQueue
+                      enqueue:
+                        entity: entity
+                        target: beingProcessedContactsQueue
+                      dequeue-1:
+                        entity: entity
+                        target: availableContactsQueue
+                      queueMove-2:
+                        entity: event
+                        source: allAvailableAgentsQueue
+                        target: busyAgentsQueue
+                      abort:
+                        entity: entity
+                        containerField: internal_container_attribute
+                      updateRunTimeMetricAction:
+                        creationTimeAttributeName: contact.start
+                        ctAttributeName: contact.contactTypeOid
+                        source: entity
+                      dequeue:
+                        entity: entity
+                        target: availableContactsOrderByEnterTimeQueue
+                      updateEWT:
+                        source: entity
+                        queuedToAttribute: enqueuedTo
+                        contactBirthTime: contact.start
+                      recordMatch:
+                        contactType: <entity:attribute:contact.contactTypeOid>
+                      send Event:
+                        contactCompleted:
+                          delay:
+                            source: entity
+                            attribute: contact.handleTime
+                          target: entity
+                        agentCompleteHandleContact:
+                          delay:
+                            source: entity
+                            attribute: contact.handleTime
+                          target: event
+
+- Queue:
+    Name: allAvailableAgentsQueue
+    Description: all available agents
+    Contains: Agent
+    SortBy:
+      - entityId
+    OnAdd:
+      Action:
+        populateAvailableAgents:
+          nextSkillIntervalListView: agent.skillInterval.skillsListView
+          availableAgentsQueueTemplate: AvailableAgentsWithSkill-<nameVar>-Queue
+    OnRemove:
+      Action:
+        removeAvailableAgents:
+          nextSkillIntervalListView: agent.skillInterval.skillsListView
+          allSkills: agent.allAgentSkills
+          availableAgentsQueueTemplate: AvailableAgentsWithSkill-<nameVar>-Queue
+
+- Queue:
+    Name: loggedOffAgentsQueue
+    Description: track agents that can not process any skill due to logged off or not in a shift
+    Contains: Agent
+    SortBy:
+      - entityId
+- Queue:
+    Name: busyAgentsQueue
+    Description: track agents that can not process any skill due to busy handling contacts
+    Contains: Agent
+    SortBy:
+      - entityId
+    periodMinutes:
+      Value: intervalInMinutes
+    OnAdd:
+      Action:
+        recordTime:
+          Source: self
+          Attribute: agentBecomeBusyTime
+        update:
+          attribute: agentIsBusy
+          amount: 1
+    OnRemove:
+      Action:
+        recordTime:
+          Source: self
+          Since: agentBecomeBusyTime
+          Method: sum
+          Attribute: unavailabilitySinceLogin
+        recordTime-1:
+          Source: self
+          Attribute: agentAvailableSinceThisTime
+        update:
+          attribute: agentIsBusy
+          amount: -1
+- Queue:
+    Name: availableContactsOrderByEnterTimeQueue
+    Description: track contacts with skill to get oldest contacts (ordered by time enter to queue)
+    Contains: Contact
+    SortBy:
+      - asc contact.start
+    filterField: contact.contactTypeOid
+- Queue:
+    Name: abandonedContactsQueue
+    Description: track abandoned Contacts
+    Contains: Contact
+    SortBy:
+      - asc contact.start
+    periodMinutes:
+      Value: intervalInMinutes
+    OnAdd:
+      Action:
+        send Event:
+          doNotKeepFinishedContact:
+            target: self
+            delay:
+              by: 1
+    Events:
+      doNotKeepFinishedContact:
+        Action:
+          dequeue: abandonedContactsQueue
+- Queue:
+    Name: availableContactsQueue
+    Description: track contacts with skill
+    Contains: Contact
+    periodMinutes:
+      Value: intervalInMinutes
+    Comparator: availableContactsComparator
+    filterField: subQueueName
+    filterFunction: skills2ContactNames
+    OnCreate:
+      registerNewSubQueueAction:
+        allAvailableAgentsQueueName: allAvailableAgentsQueue
+        agentQueueTemplateName: availableAgentsWithSkillQueueTemplate
+        newQueueNameTemplate: AvailableAgentsWithSkill-<nameVar>-Queue
+        filterAttributeName: agent.skillInterval.skillsListView
+      registerEWTAction:
+        allAgentsQueueName: allAvailableAgentsQueue, busyAgentsQueue
+        contactTypeAttribute: contact.contactTypeOid
+        queuedToAttribute: enqueuedTo
+      registerMaxIntervalQueueSize:
+        queueName: availableContactsQueue
+    Events:
+      notifyAgentAvailableCheckForContactToBeHandled:
+        source: event
+        Action:
+          say: agent <entity:attribute:agent.agentId> became available check if there is a better agent that can handle any available contact (try to get from availableContactsQueue)
+          queueContains:
+            name: allAvailableAgentsQueue
+            Action:
+              send Event:
+                notifyContactAvailableCheckForAgentToHandleByAgentAvailableTrigger:
+                  target: eventQueue
+      notifyAgentAvailableCheckForContactToBeHandledFromContactAvailable:
+        source: event
+        Action:
+          say: agent <event:name> handling contact - manage to take an agent from availableAgentsWithSkillQueue2
+          queueContains:
+            name: allAvailableAgentsQueue
+            Action:
+              queueGet:
+                Filter:
+                  Value: skillsFilterField
+                Action:
+                  say: contact <entity:name> handling by an agent <event:name> - manage to take a contact from availableContactsQueue
+                  increment:
+                    source: event
+                    attribute: processedContacts
+                  increment-2:
+                    source: event
+                    attribute: processedContactsAgentFoundContact
+                  recordTime:
+                    Source: event
+                    Attribute: <entity:attribute:agent.agentSkillsByUse[<entity:attribute:subQueueSkills>].lastTimeSkillWasUsed>
+                  enqueue:
+                    entity: entity
+                    target: beingProcessedContactsQueue
+                  queueMove:
+                    entity: event
+                    source: allAvailableAgentsQueue
+                    target: busyAgentsQueue
+                  abort:
+                    entity: entity
+                    containerField: internal_container_attribute
+                  updateRunTimeMetricAction:
+                    creationTimeAttributeName: contact.start
+                    ctAttributeName: contact.contactTypeOid
+                    source: entity
+                  dequeue:
+                    entity: entity
+                    target: availableContactsOrderByEnterTimeQueue
+                  updateEWT:
+                    source: entity
+                    queuedToAttribute: enqueuedTo
+                    contactBirthTime: contact.start
+                  recordMatch:
+                    contactType: <entity:attribute:contact.contactTypeOid>
+                  send Event:
+                    contactCompleted:
+                      delay:
+                        source: entity
+                        attribute: contact.handleTime
+                      target: entity
+                    agentCompleteHandleContact:
+                      delay:
+                        source: entity
+                        attribute: contact.handleTime
+                      target: event
+
+- Queue:
+    Name: beingProcessedContactsQueue
+    Description: track contacts being processed
+    Contains: Contact
+    SortBy:
+      - entityId
+    periodMinutes:
+      Value: intervalInMinutes
+  #Resources
+- Resource:
+    Name: ACD
+    Description: Creates Contacts
+    Type: manager
+    Attributes:
+      - name: data
+        type: compoundIterable
+        distribution: contactsMultiDistribution
+        members:
+          - name: start
+            type: proxyConstant
+            source: data.start
+      - name: contactsCreated
+        type: counter
+    Events:
+      startCreateContact:
+        Source: eventQueue
+        Action:
+          say: SENDING startCreateContact EVENT <entity:attribute:data.start>
+          send Event:
+            createContact:
+              target: self
+              delay:
+                source: self
+                attribute: data.start
+                offset: absolute
+      createContact:
+        Source: self
+        Action:
+          create:
+            Entity: Contact
+      contactArrived-PleaseCreateNextContactIfNeeded:
+        Source:
+          eventQueue
+        Action:
+          say: DOING contactArrived-PleaseCreateNextContactIfNeeded
+          increment:
+            source: self
+            attribute: contactsCreated
+          next:
+            attribute: data
+          send Event:
+            createContact:
+              target: self
+              delay:
+                source: self
+                attribute: data.start
+                offset: absolute
+- Resource:
+    Name: Agent Manager
+    Description: Creates Agents
+    Type: manager
+    Attributes:
+      - name: agentsCreated
+        type: counter
+    Events:
+      createAgent:
+        Source:
+          eventQueue
+        Action:
+          create:
+            Entity: Agent
+          increment:
+            source: self
+            attribute: agentsCreated
+  #Entities
+- Entity:
+    Type: Agent
+    Prefix: Agent#
+    Description: Employee that does what he is told
+    Attributes:
+      - name: processedContacts
+        type: counter
+      - name: processedContactsContactFoundAgent
+        type: counter
+      - name: processedContactsAgentFoundContact
+        type: counter
+      - name: busy
+        type: constant
+        initValue: 1
+      - name: notBusy
+        type: constant
+        initValue: 0
+      - name: agentIsBusy
+        type: number
+        initValue: 0
+      - name: agentAvailableSinceThisTime
+        type: SimulatedTime
+      - name: unavailabilitySinceLogin
+        type: number
+        initValue: 0
+      - name: agentBecomeBusyTime
+        type: SimulatedTime
+      - name: agent
+        type: compound
+        distribution: agentMultiDistribution
+        members:
+          - name: agentId
+            type: constant
+            source: agent.agentId
+          - name: allAgentSkillOids
+            type: constantList
+            source: agent.allAgentSkillOids
+          - name: agentSkillsByUse
+            type: compoundListMap
+            source: agent.allAgentSkillOids
+            members:
+              - name: lastTimeSkillWasUsed
+                type: simulatedTime
+          - name: skillInterval
+            type: compoundIterable
+            dataDistribution: agent.skillInterval
+            members:
+              - name: start
+                type: proxyConstant
+                source: agent.skillInterval.start
+              - name: nextStart
+                type: proxyConstant
+                source: agent.skillInterval.nextStart
+              - name: skills
+                type: proxyCompoundListMap
+                source: agent.skillInterval.skills:skill
+                members:
+                  - name: skill
+                    type: Constant
+                    source: agent.skillInterval.skills.skill
+                  - name: level
+                    type: Constant
+                    source: agent.skillInterval.skills.level
+              - name: skillsListView
+                type: proxyConstantList
+                source: agent.skillInterval.skills
+                field: skill
+              - name: skillsListViewSortedBySkillLevel
+                type: proxySortedView
+                source: agent.skillInterval.skills
+                comparator: skillLevelComparator
+                field: skill
+          - name: loginList
+            type: compoundIterable
+            dataDistribution: agent.loginList
+            members:
+              - name: loginStart
+                type: proxyConstant
+                source: agent.loginList.loginStart
+          - name: logoutList
+            type: compoundIterable
+            dataDistribution: agent.logoutList
+            members:
+              - name: logoutStart
+                type: proxyConstant
+                source: agent.logoutList.logoutStart
+    OnCreate:
+      say: agent has been created. agentId <entity:attribute:agent.agentId>
+      record:
+        key: name
+        value: <entity:attribute:agent.agentId>
+      enqueue: loggedOffAgentsQueue
+      send Event:
+        nextLogin:
+          target: self
+          delay:
+            offset: absolute
+            attribute: agent.loginList.loginStart
+        nextSkillInterval:
+          target: self
+          delay:
+            offset: absolute
+            attribute: agent.skillInterval.nextStart
+        nextLogout:
+          target: self
+          delay:
+            offset: absolute
+            attribute: agent.logoutList.logoutStart
+        createAgent:
+          target: eventQueue
+          condition:
+            notEmptyDistribution: agentMultiDistribution
+    Events:
+      nextLogin:
+        Action:
+          set:
+            attribute: unavailabilitySinceLogin
+            amount: 0
+          recordTime:
+            Source: self
+            Attribute: agentAvailableSinceThisTime
+          say: Hello everyone, another day in the office !
+          dequeue: loggedOffAgentsQueue
+          next:
+            attribute: agent.loginList
+          send Event:
+            nextLogin:
+              target: self
+              delay:
+                attribute: agent.loginList.loginStart
+                offset: absolute
+      nextSkillInterval:
+        Action:
+          next:
+            attribute: agent.skillInterval
+          say: nextSkillInterval for agentId <entity:attribute:agent.agentId>
+          moveAgentToRelevantAvailableQueues:
+            nextSkillIntervalListView: agent.skillInterval.skillsListView
+            availableAgentsQueueTemplate: AvailableAgentsWithSkill-<nameVar>-Queue
+          condition:
+            source: self
+            attribute1: agentIsBusy
+            attribute2: notBusy
+            equal:
+              Action:
+                send Event-1:
+                  notifyAgentAvailableCheckForContactToBeHandled:
+                    target: eventQueue
+          invalidateEWTCache:
+            cacheType: agents
+          send Event:
+            nextSkillInterval:
+              target: self
+              delay:
+                attribute: agent.skillInterval.nextStart
+                offset: absolute
+      nextLogout:
+        Action:
+          say: Bye Thanks C U Tomorrow
+          invalidateEWTCache:
+            cacheType: agents
+          dequeue:
+            - allAvailableAgentsQueue
+            - busyAgentsQueue
+          enqueue: loggedOffAgentsQueue
+          next:
+            attribute: agent.logoutList
+          send Event:
+            nextLogout:
+              target: self
+              delay:
+                attribute: agent.logoutList.logoutStart
+                offset: absolute
+      agentCompleteHandleContact:
+        Action:
+          set:
+            attribute: availabilitySinceLastContactCompleted
+            amount: 0
+          say: agent CompleteHandleContact.
+          dequeue: busyAgentsQueue
+          enqueue: allAvailableAgentsQueue
+          send Event:
+            notifyAgentAvailableCheckForContactToBeHandled:
+              target: eventQueue
+- Entity:
+    Type: Contact
+    Prefix: Contact#
+    Description: Contact that does what he is told
+    Attributes:
+      - name: contact
+        type: compound
+        source:
+          resource: ACD
+          attribute: data
+        members:
+          - name: contactTypeOid
+            source: contact.contactTypeOid
+            type: constant
+          - name: start
+            source: contact.start
+            type: constant
+          - name: intervalInSeconds
+            type: constant
+            source: contact.intervalInSeconds
+          - name: offeredCalls
+            type: constant
+            source: contact.offeredCalls
+          - name: handleTime
+            type: constant
+            source: contact.handleTime
+          - name: abandonedTime
+            type: constant
+            source: contact.abandonedTime
+          - name: priority
+            type: number
+      - name: enqueuedTo
+        type: set
+    OnCreate:
+      say: creating Contact with contactTypeOid:<entity:attribute:contact.contactTypeOid> start:<entity:attribute:contact.start> offeredCalls:<entity:attribute:contact.offeredCalls> handleTime:<entity:attribute:contact.handleTime>
+      record:
+        key: name
+        value: <entity:attribute:contact.contactTypeOid>
+      distributeContact:
+        contactType: <entity:attribute:contact.contactTypeOid>
+        availableAgentsQueueTemplate: AvailableAgentsWithSkill-<nameVar>-Queue
+      send Event:
+        contactArrived-PleaseCreateNextContactIfNeeded:
+          target: eventQueue
+        abandonedContact:
+          target: event
+          delay:
+            attribute: contact.abandonedTime
+    Events:
+      contactCompleted:
+        Source:
+          - eventQueue
+        Action:
+          dequeue: beingProcessedContactsQueue
+      abandonedContact:
+        Source:
+          - eventQueue
+        Action:
+          queueContains:
+            name: availableContactsQueue
+            Action:
+              queueMove:
+                entity: event
+                source: availableContactsQueue
+                target: abandonedContactsQueue
+              dequeue:
+                entity: event
+                target: availableContactsOrderByEnterTimeQueue
+  #RoutingRules
+- RoutingRule:
+    Name: RouteToAgent
+    Description: route a contact to an agent queue based on the skill in the contact (from the event)
+    type: routeToQueue
+    sendEvent: notifyContactAvailableCheckForAgentToHandle
+    target: AvailableAgentsWithSkill-<entity:attribute:contact.contactTypeOid>-Queue
+  # Events
+- Event:
+    # called by Agent Manager and Agent in order to create teh agents entities by the agentMultiDistribution
+    Name: createAgent
+- Event:
+    # event is sent when notify available contact Queue that agent is available.(agent to contact)
+    Name: notifyAgentAvailableCheckForContactToBeHandled
+- Event:
+    # event is sent when contact is available, and we want to look which agent should handle
+    Name: notifyAgentAvailableCheckForContactToBeHandledFromContactAvailable
+- Event:
+    # event is sent in order to iterate next agent skillInterval
+    Name: nextSkillInterval
+
+- Event:
+    #initial event for start create all contacts. ACD listener on this sends 'createContact' event
+    Name: startCreateContact
+- Event:
+    #created by ACD. ACD listens on this event and : create 'Contact' entity + send another such event by contactsMultiDistribution
+    Name: createContact
+- Event:
+    # set next on contactsMultiDistribution
+    Name: contactArrived-PleaseCreateNextContactIfNeeded
+- Event:
+    # after contact is available - send a message to routing rules to route this contact to an available agent on a skill of this contact
+    Name: routeContact
+- Event:
+    # routing rule send this messages for route a contact to an agent with this contact skill
+    Name: notifyContactAvailableCheckForAgentToHandle
+- Event:
+    # routing rule send this messages to look for a contact that is most relevant for available agent
+    Name: notifyContactAvailableCheckForAgentToHandleByAgentAvailableTrigger
+- Event:
+    # event is sent when contact completed handled, and now it is removed from the beingProcessedContactsQueue
+    Name: contactCompleted
+- Event:
+    # event is sent when contact completed handled. moving agent from busy to available on all agent skills queues.
+    Name: agentCompleteHandleContact
+- Event:
+    # event is sent when contact created to simulate abandon of contact after contact.abandonedTime period if not handled
+    Name: abandonedContact
+
+
+  # Start Events
+- Start Event:
+    - createAgent
+    - startCreateContact
+ 
