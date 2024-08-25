@@ -18,14 +18,21 @@ public class DistributionRulesBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRules(DistributionRulesParser.RulesContext ctx) { return visitChildren(ctx); }
+	@Override public T visitRoutingRuleSet(DistributionRulesParser.RoutingRuleSetContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitRule(DistributionRulesParser.RuleContext ctx) { return visitChildren(ctx); }
+	@Override public T visitRoutingRuleGroup(DistributionRulesParser.RoutingRuleGroupContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitRoutingRule(DistributionRulesParser.RoutingRuleContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -39,7 +46,7 @@ public class DistributionRulesBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSkills(DistributionRulesParser.SkillsContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAndSkills(DistributionRulesParser.AndSkillsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

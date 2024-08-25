@@ -11,17 +11,23 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link DistributionRulesParser#rules}.
+	 * Visit a parse tree produced by {@link DistributionRulesParser#routingRuleSet}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRules(DistributionRulesParser.RulesContext ctx);
+	T visitRoutingRuleSet(DistributionRulesParser.RoutingRuleSetContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DistributionRulesParser#rule}.
+	 * Visit a parse tree produced by {@link DistributionRulesParser#routingRuleGroup}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitRule(DistributionRulesParser.RuleContext ctx);
+	T visitRoutingRuleGroup(DistributionRulesParser.RoutingRuleGroupContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#routingRule}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRoutingRule(DistributionRulesParser.RoutingRuleContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#ruleAction}.
 	 * @param ctx the parse tree
@@ -29,11 +35,11 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRuleAction(DistributionRulesParser.RuleActionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DistributionRulesParser#skills}.
+	 * Visit a parse tree produced by {@link DistributionRulesParser#andSkills}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSkills(DistributionRulesParser.SkillsContext ctx);
+	T visitAndSkills(DistributionRulesParser.AndSkillsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#skill}.
 	 * @param ctx the parse tree

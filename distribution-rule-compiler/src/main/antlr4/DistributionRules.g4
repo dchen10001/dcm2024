@@ -1,12 +1,14 @@
 grammar DistributionRules;
 
-rules: rule (waitRule rule)+;
+routingRuleSet: routingRuleGroup (waitRule routingRuleGroup)*;
 
-rule: ruleAction skills order;
+routingRuleGroup: (routingRule)+;
+
+routingRule: ruleAction andSkills order;
 
 ruleAction: 'queue to';
 
-skills: skill ('and' skill)+;
+andSkills: skill ('and' skill)*;
 
 skill: '@S:' entity_identifier;
 

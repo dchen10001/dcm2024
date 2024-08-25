@@ -8,25 +8,35 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface DistributionRulesListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link DistributionRulesParser#rules}.
+	 * Enter a parse tree produced by {@link DistributionRulesParser#routingRuleSet}.
 	 * @param ctx the parse tree
 	 */
-	void enterRules(DistributionRulesParser.RulesContext ctx);
+	void enterRoutingRuleSet(DistributionRulesParser.RoutingRuleSetContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DistributionRulesParser#rules}.
+	 * Exit a parse tree produced by {@link DistributionRulesParser#routingRuleSet}.
 	 * @param ctx the parse tree
 	 */
-	void exitRules(DistributionRulesParser.RulesContext ctx);
+	void exitRoutingRuleSet(DistributionRulesParser.RoutingRuleSetContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DistributionRulesParser#rule}.
+	 * Enter a parse tree produced by {@link DistributionRulesParser#routingRuleGroup}.
 	 * @param ctx the parse tree
 	 */
-	void enterRule(DistributionRulesParser.RuleContext ctx);
+	void enterRoutingRuleGroup(DistributionRulesParser.RoutingRuleGroupContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DistributionRulesParser#rule}.
+	 * Exit a parse tree produced by {@link DistributionRulesParser#routingRuleGroup}.
 	 * @param ctx the parse tree
 	 */
-	void exitRule(DistributionRulesParser.RuleContext ctx);
+	void exitRoutingRuleGroup(DistributionRulesParser.RoutingRuleGroupContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#routingRule}.
+	 * @param ctx the parse tree
+	 */
+	void enterRoutingRule(DistributionRulesParser.RoutingRuleContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#routingRule}.
+	 * @param ctx the parse tree
+	 */
+	void exitRoutingRule(DistributionRulesParser.RoutingRuleContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#ruleAction}.
 	 * @param ctx the parse tree
@@ -38,15 +48,15 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 */
 	void exitRuleAction(DistributionRulesParser.RuleActionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DistributionRulesParser#skills}.
+	 * Enter a parse tree produced by {@link DistributionRulesParser#andSkills}.
 	 * @param ctx the parse tree
 	 */
-	void enterSkills(DistributionRulesParser.SkillsContext ctx);
+	void enterAndSkills(DistributionRulesParser.AndSkillsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DistributionRulesParser#skills}.
+	 * Exit a parse tree produced by {@link DistributionRulesParser#andSkills}.
 	 * @param ctx the parse tree
 	 */
-	void exitSkills(DistributionRulesParser.SkillsContext ctx);
+	void exitAndSkills(DistributionRulesParser.AndSkillsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#skill}.
 	 * @param ctx the parse tree
