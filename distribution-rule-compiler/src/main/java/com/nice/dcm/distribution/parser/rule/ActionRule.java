@@ -18,7 +18,7 @@ public class ActionRule implements Node {
 	
 	@Override
 	public NodeType getNodeType() {
-		return null;
+		return NodeType.ACTIONRULE;
 	}
 
 }

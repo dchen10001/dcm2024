@@ -1,6 +1,5 @@
 package com.nice.dcm.distribution.parser;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -11,12 +10,12 @@ import org.junit.jupiter.api.Test;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
+import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
-import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
@@ -29,9 +28,9 @@ class SkillRuleVisitorTest {
 		String script = "queue to @S: a2 with priority 2 \n" +
 						"queue to @S: a1 with priority 1" + 
 					    "wait 20 \n" +
-					    "queue to @S: a4 with priority 4 " +
+					    "queue to @S: a4 with priority 4 \n" +
 					    "wait 10 \n" +
-					    "queue to @S: a3 with priority 3 ";
+					    "queue to @S: a3 with priority 3 \n";
 		RoutingRuleSet rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
 		Assertions.assertEquals(3, rule.getRoutingRuleGroups().size());
 		RoutingRuleGroup g1 = rule.getRoutingRuleGroups().get(0);
@@ -47,6 +46,33 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(20, g3.getWaitAfterSeconds());
 		Assertions.assertEquals(1, g3.getRoutingRules().size());
 		Assertions.assertEquals(Set.of("a4"), g3.getRoutingRules().get(0).getSkills());
+		
+
+		script = "queue to @S: a2 and @S: a2 with priority 2 \n" +
+				"queue to @S: a1 with priority 1" + 
+				"queue to @S: a1 with priority 1" + 
+			    "wait 20 \n" +
+			    "queue to @S: a4 with priority 4 \n" +
+			    "wait 10 \n" +
+			    "queue to @S: a3 with priority 3 \n";
+			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			Assertions.assertEquals(3, rule.getRoutingRuleGroups().size());
+			 g1 = rule.getRoutingRuleGroups().get(0);
+			Assertions.assertEquals(0, g1.getWaitAfterSeconds());
+			Assertions.assertEquals(2, g1.getRules().size());
+			
+			 g2 = rule.getRoutingRuleGroups().get(1);
+			Assertions.assertEquals(10, g2.getWaitAfterSeconds());
+			Assertions.assertEquals(1, g2.getRoutingRules().size());
+			Assertions.assertEquals(Set.of("a3"), g2.getRoutingRules().get(0).getSkills());
+			
+			 g3 = rule.getRoutingRuleGroups().get(2);
+			Assertions.assertEquals(20, g3.getWaitAfterSeconds());
+			Assertions.assertEquals(1, g3.getRoutingRules().size());
+			Assertions.assertEquals(Set.of("a4"), g3.getRoutingRules().get(0).getSkills());
+
+
+
 		
 		script = "queue to @S: a2 with priority 2 \n";
 		rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
@@ -66,7 +92,113 @@ class SkillRuleVisitorTest {
 		g1 = rule.getRoutingRuleGroups().get(0);
 		Assertions.assertEquals(0, g1.getWaitAfterSeconds());
 		Assertions.assertEquals(2, g1.getRoutingRules().size());
+		
+		try {
+			script = "queue to @S: a2 and @S: a2 with priority 2 \n" +
+					"queue to @S: a1 with priority 1" + 
+					"queue to @S: a1 with priority 2" + 
+				    "wait 20 \n" +
+				    "queue to @S: a4 with priority 4 \n" +
+				    "wait 10 \n" +
+				    "queue to @S: a3 with priority 3 \n";
+			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			Assertions.fail("Invalid queue to");
+		} catch(ParseCancellationException e) {
+			Assertions.assertEquals("line 2:31. Duplicated rule with different priority. One is 1 and one is 2", 
+					e.getMessage());
+		}
+		
+		try {
+			script = "queue to @S: a2 with priority 2 \n" +
+					"queue to @S: a1 with priority 1" + 
+				    "wait 20 \n" +
+				    "queue to @S: a4 with priority 4 \n" +
+				    "wait 10 \n" +
+				    "queue to @S: a3 with priority 3 \n" +
+				    "wait 100";
+			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			Assertions.fail("Invalid queue to");
+		} catch(ParseCancellationException e) {
+			Assertions.assertEquals("line 6:8 mismatched input '<EOF>' expecting 'queue to'", 
+					e.getMessage());
+		}
+		
+		try {
+			script = "queue to @S: a2 with priority 2 \n" +
+					"queue to @S: a1 with priority 1" + 
+					"wait 20 \n" +
+					"queue to @S: a4 with priority 4 \n" +
+					"wait 10 \n" +
+					"wait 10 \n" +
+					"queue to @S: a3 with priority 3 \n";
+			
+			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			Assertions.fail("Invalid queue to");
+		} catch(ParseCancellationException e) {
+			Assertions.assertEquals("line 5:0 mismatched input 'wait' expecting 'queue to'", 
+					e.getMessage());
+		}
+		
 	}
+	
+	@Test
+	void routingWaitRuleGroupTest() {
+		
+		String script = "wait 10 \n" +
+				"queue to @S: a1 with priority 1";
+		
+		Node rule = util.vistorRoutingWaitRuleGroup(script, visitor);
+		Assertions.assertTrue(rule instanceof RoutingRuleGroup);
+		RoutingRuleGroup routingRuleGroup = ((RoutingRuleGroup)rule);
+		Assertions.assertEquals(10, routingRuleGroup.getWaitAfterSeconds());
+		
+		
+		Set<RoutingRule> rules = routingRuleGroup.getRules();
+		Assertions.assertEquals(1, rules.size());
+		RoutingRule routingRule = rules.iterator().next();
+		Assertions.assertEquals(ActionType.QUEUE_TO, routingRule.getAction().getAction());
+		Assertions.assertEquals(1, routingRule.getPriority());
+		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
+		
+		
+		script = "wait 10 \n" +
+				"queue to @S: a2 with priority 2 \n" +
+				"queue to @S: a1 with priority 1";
+		
+		rule = util.vistorRoutingWaitRuleGroup(script, visitor);
+		Assertions.assertTrue(rule instanceof RoutingRuleGroup);
+		routingRuleGroup = ((RoutingRuleGroup)rule);
+		Assertions.assertEquals(10, routingRuleGroup.getWaitAfterSeconds());
+		rules = routingRuleGroup.getRules();
+		Assertions.assertEquals(2, rules.size());
+		int pri = 1;
+		for(RoutingRule r : rules) {
+			Assertions.assertEquals(pri, r.getPriority());
+			Assertions.assertEquals(Set.of("a" + pri), r.getSkills());
+			pri++;
+		}
+		
+		try {
+			script = "queue to @S: a1 with priority 1";
+			rule = util.vistorRoutingWaitRuleGroup(script, visitor);
+			Assertions.fail("Invalid queue to");
+		} catch(ParseCancellationException e) {
+			Assertions.assertEquals("line 1:0 mismatched input 'queue to' expecting 'wait'", 
+					e.getMessage());
+		}
+		
+		try {
+			script = "test queue to @S: a2 with priority 2 \n" +
+					"wait 10 \n" + 
+					"queue to @S: a1 with priority 1";
+			rule = util.vistorRoutingWaitRuleGroup(script, visitor);
+			Assertions.fail("Invalid queue to");
+		} catch(ParseCancellationException e) {
+			Assertions.assertEquals("line 1:0 token recognition error at: 't'", 
+					e.getMessage());
+		}
+	}
+	
 	
 	@Test
 	void routingRuleGroupTest() {

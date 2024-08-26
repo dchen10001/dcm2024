@@ -1,6 +1,8 @@
 grammar DistributionRules;
 
-routingRuleSet: routingRuleGroup (waitRule routingRuleGroup)*;
+routingRuleSet: routingRuleGroup (routingWaitingRuleGroup)* EOF;
+
+routingWaitingRuleGroup: waitRule routingRuleGroup;
 
 routingRuleGroup: (routingRule)+;
 

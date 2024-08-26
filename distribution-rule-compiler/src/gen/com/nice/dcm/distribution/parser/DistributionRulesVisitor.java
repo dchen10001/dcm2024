@@ -17,6 +17,12 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRoutingRuleSet(DistributionRulesParser.RoutingRuleSetContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#routingWaitingRuleGroup}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRoutingWaitingRuleGroup(DistributionRulesParser.RoutingWaitingRuleGroupContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#routingRuleGroup}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

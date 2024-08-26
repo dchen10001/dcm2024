@@ -63,6 +63,11 @@ public class ParserUtil {
     	return parser.routingRuleGroup().accept(vistor);    
     }
     
+    public <T> T vistorRoutingWaitRuleGroup(String script, DistributionRulesVisitor<T> vistor) {
+    	DistributionRulesParser parser = parserScript(script);
+    	return parser.routingWaitingRuleGroup().accept(vistor);    
+    }
+    
     public <T> T vistorRoutingRuleSet(String script, DistributionRulesVisitor<T> vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return parser.routingRuleSet().accept(vistor);    

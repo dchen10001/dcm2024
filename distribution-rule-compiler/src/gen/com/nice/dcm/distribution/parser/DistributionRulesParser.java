@@ -19,13 +19,13 @@ public class DistributionRulesParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, NUMBER=6, UUID_OR_HEXA=7, WHITESPACE=8;
 	public static final int
-		RULE_routingRuleSet = 0, RULE_routingRuleGroup = 1, RULE_routingRule = 2, 
-		RULE_ruleAction = 3, RULE_andSkills = 4, RULE_skill = 5, RULE_entity_identifier = 6, 
-		RULE_order = 7, RULE_waitRule = 8;
+		RULE_routingRuleSet = 0, RULE_routingWaitingRuleGroup = 1, RULE_routingRuleGroup = 2, 
+		RULE_routingRule = 3, RULE_ruleAction = 4, RULE_andSkills = 5, RULE_skill = 6, 
+		RULE_entity_identifier = 7, RULE_order = 8, RULE_waitRule = 9;
 	private static String[] makeRuleNames() {
 		return new String[] {
-			"routingRuleSet", "routingRuleGroup", "routingRule", "ruleAction", "andSkills", 
-			"skill", "entity_identifier", "order", "waitRule"
+			"routingRuleSet", "routingWaitingRuleGroup", "routingRuleGroup", "routingRule", 
+			"ruleAction", "andSkills", "skill", "entity_identifier", "order", "waitRule"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -94,17 +94,15 @@ public class DistributionRulesParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class RoutingRuleSetContext extends ParserRuleContext {
-		public List<RoutingRuleGroupContext> routingRuleGroup() {
-			return getRuleContexts(RoutingRuleGroupContext.class);
+		public RoutingRuleGroupContext routingRuleGroup() {
+			return getRuleContext(RoutingRuleGroupContext.class,0);
 		}
-		public RoutingRuleGroupContext routingRuleGroup(int i) {
-			return getRuleContext(RoutingRuleGroupContext.class,i);
+		public TerminalNode EOF() { return getToken(DistributionRulesParser.EOF, 0); }
+		public List<RoutingWaitingRuleGroupContext> routingWaitingRuleGroup() {
+			return getRuleContexts(RoutingWaitingRuleGroupContext.class);
 		}
-		public List<WaitRuleContext> waitRule() {
-			return getRuleContexts(WaitRuleContext.class);
-		}
-		public WaitRuleContext waitRule(int i) {
-			return getRuleContext(WaitRuleContext.class,i);
+		public RoutingWaitingRuleGroupContext routingWaitingRuleGroup(int i) {
+			return getRuleContext(RoutingWaitingRuleGroupContext.class,i);
 		}
 		public RoutingRuleSetContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -132,7 +130,7 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(18);
+			setState(20);
 			routingRuleGroup();
 			setState(24);
 			_errHandler.sync(this);
@@ -140,16 +138,66 @@ public class DistributionRulesParser extends Parser {
 			while (_la==T__4) {
 				{
 				{
-				setState(19);
-				waitRule();
-				setState(20);
-				routingRuleGroup();
+				setState(21);
+				routingWaitingRuleGroup();
 				}
 				}
 				setState(26);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
+			setState(27);
+			match(EOF);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	@SuppressWarnings("CheckReturnValue")
+	public static class RoutingWaitingRuleGroupContext extends ParserRuleContext {
+		public WaitRuleContext waitRule() {
+			return getRuleContext(WaitRuleContext.class,0);
+		}
+		public RoutingRuleGroupContext routingRuleGroup() {
+			return getRuleContext(RoutingRuleGroupContext.class,0);
+		}
+		public RoutingWaitingRuleGroupContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_routingWaitingRuleGroup; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).enterRoutingWaitingRuleGroup(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).exitRoutingWaitingRuleGroup(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DistributionRulesVisitor ) return ((DistributionRulesVisitor<? extends T>)visitor).visitRoutingWaitingRuleGroup(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final RoutingWaitingRuleGroupContext routingWaitingRuleGroup() throws RecognitionException {
+		RoutingWaitingRuleGroupContext _localctx = new RoutingWaitingRuleGroupContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_routingWaitingRuleGroup);
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(29);
+			waitRule();
+			setState(30);
+			routingRuleGroup();
 			}
 		}
 		catch (RecognitionException re) {
@@ -192,22 +240,22 @@ public class DistributionRulesParser extends Parser {
 
 	public final RoutingRuleGroupContext routingRuleGroup() throws RecognitionException {
 		RoutingRuleGroupContext _localctx = new RoutingRuleGroupContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_routingRuleGroup);
+		enterRule(_localctx, 4, RULE_routingRuleGroup);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(28); 
+			setState(33); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(27);
+				setState(32);
 				routingRule();
 				}
 				}
-				setState(30); 
+				setState(35); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( _la==T__0 );
@@ -256,15 +304,15 @@ public class DistributionRulesParser extends Parser {
 
 	public final RoutingRuleContext routingRule() throws RecognitionException {
 		RoutingRuleContext _localctx = new RoutingRuleContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_routingRule);
+		enterRule(_localctx, 6, RULE_routingRule);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(32);
+			setState(37);
 			ruleAction();
-			setState(33);
+			setState(38);
 			andSkills();
-			setState(34);
+			setState(39);
 			order();
 			}
 		}
@@ -302,11 +350,11 @@ public class DistributionRulesParser extends Parser {
 
 	public final RuleActionContext ruleAction() throws RecognitionException {
 		RuleActionContext _localctx = new RuleActionContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_ruleAction);
+		enterRule(_localctx, 8, RULE_ruleAction);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(36);
+			setState(41);
 			match(T__0);
 			}
 		}
@@ -350,26 +398,26 @@ public class DistributionRulesParser extends Parser {
 
 	public final AndSkillsContext andSkills() throws RecognitionException {
 		AndSkillsContext _localctx = new AndSkillsContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_andSkills);
+		enterRule(_localctx, 10, RULE_andSkills);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(38);
-			skill();
 			setState(43);
+			skill();
+			setState(48);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__1) {
 				{
 				{
-				setState(39);
+				setState(44);
 				match(T__1);
-				setState(40);
+				setState(45);
 				skill();
 				}
 				}
-				setState(45);
+				setState(50);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -412,13 +460,13 @@ public class DistributionRulesParser extends Parser {
 
 	public final SkillContext skill() throws RecognitionException {
 		SkillContext _localctx = new SkillContext(_ctx, getState());
-		enterRule(_localctx, 10, RULE_skill);
+		enterRule(_localctx, 12, RULE_skill);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(46);
+			setState(51);
 			match(T__2);
-			setState(47);
+			setState(52);
 			entity_identifier();
 			}
 		}
@@ -458,12 +506,12 @@ public class DistributionRulesParser extends Parser {
 
 	public final Entity_identifierContext entity_identifier() throws RecognitionException {
 		Entity_identifierContext _localctx = new Entity_identifierContext(_ctx, getState());
-		enterRule(_localctx, 12, RULE_entity_identifier);
+		enterRule(_localctx, 14, RULE_entity_identifier);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(49);
+			setState(54);
 			_la = _input.LA(1);
 			if ( !(_la==NUMBER || _la==UUID_OR_HEXA) ) {
 			_errHandler.recoverInline(this);
@@ -510,13 +558,13 @@ public class DistributionRulesParser extends Parser {
 
 	public final OrderContext order() throws RecognitionException {
 		OrderContext _localctx = new OrderContext(_ctx, getState());
-		enterRule(_localctx, 14, RULE_order);
+		enterRule(_localctx, 16, RULE_order);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(51);
+			setState(56);
 			match(T__3);
-			setState(52);
+			setState(57);
 			match(NUMBER);
 			}
 		}
@@ -555,13 +603,13 @@ public class DistributionRulesParser extends Parser {
 
 	public final WaitRuleContext waitRule() throws RecognitionException {
 		WaitRuleContext _localctx = new WaitRuleContext(_ctx, getState());
-		enterRule(_localctx, 16, RULE_waitRule);
+		enterRule(_localctx, 18, RULE_waitRule);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54);
+			setState(59);
 			match(T__4);
-			setState(55);
+			setState(60);
 			match(NUMBER);
 			}
 		}
@@ -577,39 +625,41 @@ public class DistributionRulesParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\u0004\u0001\b:\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\b?\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
-		"\b\u0007\b\u0001\u0000\u0001\u0000\u0001\u0000\u0001\u0000\u0005\u0000"+
-		"\u0017\b\u0000\n\u0000\f\u0000\u001a\t\u0000\u0001\u0001\u0004\u0001\u001d"+
-		"\b\u0001\u000b\u0001\f\u0001\u001e\u0001\u0002\u0001\u0002\u0001\u0002"+
-		"\u0001\u0002\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001\u0004"+
-		"\u0005\u0004*\b\u0004\n\u0004\f\u0004-\t\u0004\u0001\u0005\u0001\u0005"+
-		"\u0001\u0005\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001\u0007"+
-		"\u0001\b\u0001\b\u0001\b\u0001\b\u0000\u0000\t\u0000\u0002\u0004\u0006"+
-		"\b\n\f\u000e\u0010\u0000\u0001\u0001\u0000\u0006\u00073\u0000\u0012\u0001"+
-		"\u0000\u0000\u0000\u0002\u001c\u0001\u0000\u0000\u0000\u0004 \u0001\u0000"+
-		"\u0000\u0000\u0006$\u0001\u0000\u0000\u0000\b&\u0001\u0000\u0000\u0000"+
-		"\n.\u0001\u0000\u0000\u0000\f1\u0001\u0000\u0000\u0000\u000e3\u0001\u0000"+
-		"\u0000\u0000\u00106\u0001\u0000\u0000\u0000\u0012\u0018\u0003\u0002\u0001"+
-		"\u0000\u0013\u0014\u0003\u0010\b\u0000\u0014\u0015\u0003\u0002\u0001\u0000"+
-		"\u0015\u0017\u0001\u0000\u0000\u0000\u0016\u0013\u0001\u0000\u0000\u0000"+
+		"\b\u0007\b\u0002\t\u0007\t\u0001\u0000\u0001\u0000\u0005\u0000\u0017\b"+
+		"\u0000\n\u0000\f\u0000\u001a\t\u0000\u0001\u0000\u0001\u0000\u0001\u0001"+
+		"\u0001\u0001\u0001\u0001\u0001\u0002\u0004\u0002\"\b\u0002\u000b\u0002"+
+		"\f\u0002#\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0003\u0001\u0004"+
+		"\u0001\u0004\u0001\u0005\u0001\u0005\u0001\u0005\u0005\u0005/\b\u0005"+
+		"\n\u0005\f\u00052\t\u0005\u0001\u0006\u0001\u0006\u0001\u0006\u0001\u0007"+
+		"\u0001\u0007\u0001\b\u0001\b\u0001\b\u0001\t\u0001\t\u0001\t\u0001\t\u0000"+
+		"\u0000\n\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0000\u0001\u0001"+
+		"\u0000\u0006\u00077\u0000\u0014\u0001\u0000\u0000\u0000\u0002\u001d\u0001"+
+		"\u0000\u0000\u0000\u0004!\u0001\u0000\u0000\u0000\u0006%\u0001\u0000\u0000"+
+		"\u0000\b)\u0001\u0000\u0000\u0000\n+\u0001\u0000\u0000\u0000\f3\u0001"+
+		"\u0000\u0000\u0000\u000e6\u0001\u0000\u0000\u0000\u00108\u0001\u0000\u0000"+
+		"\u0000\u0012;\u0001\u0000\u0000\u0000\u0014\u0018\u0003\u0004\u0002\u0000"+
+		"\u0015\u0017\u0003\u0002\u0001\u0000\u0016\u0015\u0001\u0000\u0000\u0000"+
 		"\u0017\u001a\u0001\u0000\u0000\u0000\u0018\u0016\u0001\u0000\u0000\u0000"+
-		"\u0018\u0019\u0001\u0000\u0000\u0000\u0019\u0001\u0001\u0000\u0000\u0000"+
-		"\u001a\u0018\u0001\u0000\u0000\u0000\u001b\u001d\u0003\u0004\u0002\u0000"+
-		"\u001c\u001b\u0001\u0000\u0000\u0000\u001d\u001e\u0001\u0000\u0000\u0000"+
-		"\u001e\u001c\u0001\u0000\u0000\u0000\u001e\u001f\u0001\u0000\u0000\u0000"+
-		"\u001f\u0003\u0001\u0000\u0000\u0000 !\u0003\u0006\u0003\u0000!\"\u0003"+
-		"\b\u0004\u0000\"#\u0003\u000e\u0007\u0000#\u0005\u0001\u0000\u0000\u0000"+
-		"$%\u0005\u0001\u0000\u0000%\u0007\u0001\u0000\u0000\u0000&+\u0003\n\u0005"+
-		"\u0000\'(\u0005\u0002\u0000\u0000(*\u0003\n\u0005\u0000)\'\u0001\u0000"+
-		"\u0000\u0000*-\u0001\u0000\u0000\u0000+)\u0001\u0000\u0000\u0000+,\u0001"+
-		"\u0000\u0000\u0000,\t\u0001\u0000\u0000\u0000-+\u0001\u0000\u0000\u0000"+
-		"./\u0005\u0003\u0000\u0000/0\u0003\f\u0006\u00000\u000b\u0001\u0000\u0000"+
-		"\u000012\u0007\u0000\u0000\u00002\r\u0001\u0000\u0000\u000034\u0005\u0004"+
-		"\u0000\u000045\u0005\u0006\u0000\u00005\u000f\u0001\u0000\u0000\u0000"+
-		"67\u0005\u0005\u0000\u000078\u0005\u0006\u0000\u00008\u0011\u0001\u0000"+
-		"\u0000\u0000\u0003\u0018\u001e+";
+		"\u0018\u0019\u0001\u0000\u0000\u0000\u0019\u001b\u0001\u0000\u0000\u0000"+
+		"\u001a\u0018\u0001\u0000\u0000\u0000\u001b\u001c\u0005\u0000\u0000\u0001"+
+		"\u001c\u0001\u0001\u0000\u0000\u0000\u001d\u001e\u0003\u0012\t\u0000\u001e"+
+		"\u001f\u0003\u0004\u0002\u0000\u001f\u0003\u0001\u0000\u0000\u0000 \""+
+		"\u0003\u0006\u0003\u0000! \u0001\u0000\u0000\u0000\"#\u0001\u0000\u0000"+
+		"\u0000#!\u0001\u0000\u0000\u0000#$\u0001\u0000\u0000\u0000$\u0005\u0001"+
+		"\u0000\u0000\u0000%&\u0003\b\u0004\u0000&\'\u0003\n\u0005\u0000\'(\u0003"+
+		"\u0010\b\u0000(\u0007\u0001\u0000\u0000\u0000)*\u0005\u0001\u0000\u0000"+
+		"*\t\u0001\u0000\u0000\u0000+0\u0003\f\u0006\u0000,-\u0005\u0002\u0000"+
+		"\u0000-/\u0003\f\u0006\u0000.,\u0001\u0000\u0000\u0000/2\u0001\u0000\u0000"+
+		"\u00000.\u0001\u0000\u0000\u000001\u0001\u0000\u0000\u00001\u000b\u0001"+
+		"\u0000\u0000\u000020\u0001\u0000\u0000\u000034\u0005\u0003\u0000\u0000"+
+		"45\u0003\u000e\u0007\u00005\r\u0001\u0000\u0000\u000067\u0007\u0000\u0000"+
+		"\u00007\u000f\u0001\u0000\u0000\u000089\u0005\u0004\u0000\u00009:\u0005"+
+		"\u0006\u0000\u0000:\u0011\u0001\u0000\u0000\u0000;<\u0005\u0005\u0000"+
+		"\u0000<=\u0005\u0006\u0000\u0000=\u0013\u0001\u0000\u0000\u0000\u0003"+
+		"\u0018#0";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -18,6 +18,16 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 */
 	void exitRoutingRuleSet(DistributionRulesParser.RoutingRuleSetContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#routingWaitingRuleGroup}.
+	 * @param ctx the parse tree
+	 */
+	void enterRoutingWaitingRuleGroup(DistributionRulesParser.RoutingWaitingRuleGroupContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#routingWaitingRuleGroup}.
+	 * @param ctx the parse tree
+	 */
+	void exitRoutingWaitingRuleGroup(DistributionRulesParser.RoutingWaitingRuleGroupContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#routingRuleGroup}.
 	 * @param ctx the parse tree
 	 */
