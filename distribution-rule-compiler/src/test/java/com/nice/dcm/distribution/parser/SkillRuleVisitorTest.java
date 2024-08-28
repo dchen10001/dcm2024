@@ -14,6 +14,7 @@ import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
+import com.nice.dcm.distribution.parser.rule.RoutingRule.Agent_Status;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
@@ -245,10 +246,11 @@ class SkillRuleVisitorTest {
 	@Test
 	void routingRuleTest() {
 
-		String script = "queue to @S: a1 with priority 1";
+		String script = "queue to least busy of   @S: a1 with priority 1";
 		Node rule = util.vistorRoutingRule(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRule);
 		RoutingRule routingRule = ((RoutingRule)rule);
+		Assertions.assertEquals(Agent_Status.LEAST_BUSY, routingRule.getStatus());
 		Assertions.assertEquals(ActionType.QUEUE_TO, routingRule.getAction().getAction());
 		Assertions.assertEquals(1, routingRule.getPriority());
 		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
@@ -257,6 +259,7 @@ class SkillRuleVisitorTest {
 		rule = util.vistorRoutingRule(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRule);
 		routingRule = ((RoutingRule)rule);
+		Assertions.assertNull(routingRule.getStatus());
 		Assertions.assertEquals(1, routingRule.getPriority());
 		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
 		

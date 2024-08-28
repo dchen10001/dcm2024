@@ -30,6 +30,7 @@ import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
+import com.nice.dcm.distribution.parser.rule.RoutingRule.Agent_Status;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
@@ -111,7 +112,8 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 			.stream()
 			.map(SkillRule::getSkillOid)
 			.collect(Collectors.toCollection(() -> new TreeSet<>()));
-		return new RoutingRule(action, skillOids, order.getPriority());
+		return new RoutingRule(action, skillOids, order.getPriority(),
+				toAgentStatus(ctx.AGENT_STATUS()));
 	}
 	
 	@Override
@@ -150,6 +152,13 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 
 	private int toNumber(TerminalNode node) {
 		return Integer.parseInt(node.getText());
+	}
+	
+	private Agent_Status toAgentStatus(TerminalNode node) {
+		if(node == null) {
+			return null;
+		} 
+		return Agent_Status.findByValue(node.getText());
 	}
 
 	@Override
