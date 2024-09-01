@@ -107,4 +107,14 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitWaitRule(DistributionRulesParser.WaitRuleContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#agent_status}.
+	 * @param ctx the parse tree
+	 */
+	void enterAgent_status(DistributionRulesParser.Agent_statusContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#agent_status}.
+	 * @param ctx the parse tree
+	 */
+	void exitAgent_status(DistributionRulesParser.Agent_statusContext ctx);
 }

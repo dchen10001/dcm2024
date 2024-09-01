@@ -54,13 +54,15 @@
 						</goals>
 						<configuration>
 							<arguments>
-								<argument>-visitor</argument>
 								<argument>-package</argument>
 								<argument>com.nice.dcm.distribution.parser</argument>
+								<!-- 
+								<argument>-visitor</argument>
 								<argument>-o</argument>
-								<argument>
-									${basedir}/src/gen/com/nice/dcm/distribution/parser</argument>
+								<argument>${basedir}/src/gen/com/nice/dcm/distribution/parser</argument>
+								-->
 							</arguments>
+							<outputDirectory>src/gen/com/nice/dcm/distribution/parser</outputDirectory>
 							<sourceDirectory>src/main/antlr4</sourceDirectory>
 							<listener>true</listener>
 							<visitor>true</visitor>

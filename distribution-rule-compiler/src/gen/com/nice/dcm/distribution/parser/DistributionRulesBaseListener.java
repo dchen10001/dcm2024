@@ -132,6 +132,18 @@ public class DistributionRulesBaseListener implements DistributionRulesListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitWaitRule(DistributionRulesParser.WaitRuleContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAgent_status(DistributionRulesParser.Agent_statusContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAgent_status(DistributionRulesParser.Agent_statusContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

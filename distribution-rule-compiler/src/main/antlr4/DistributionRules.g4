@@ -6,9 +6,9 @@ routingWaitingRuleGroup: waitRule routingRuleGroup;
 
 routingRuleGroup: (routingRule)+;
 
-routingRule: ruleAction (AGENT_STATUS)? andSkills order;
+routingRule: ruleAction (agent_status)? andSkills order;
 
-ruleAction: 'queue to';
+ruleAction: QUEUE_TO | ROUTE_TO;
 
 andSkills: skill ('and' skill)*;
 
@@ -20,7 +20,15 @@ order: 'with priority' NUMBER;
 
 waitRule: 'wait' NUMBER;
 
-AGENT_STATUS: 'least busy of'|'higher ranking of';
+agent_status: LEAST_BUSY|HIGHER_RANKING;
+
+// Agent status
+LEAST_BUSY: 'least busy of';
+HIGHER_RANKING: 'higher ranking of';
+
+// rule Action
+QUEUE_TO: 'queue to';
+ROUTE_TO: 'route to';
 
 NUMBER: [1-9]([0-9]*);
 UUID_OR_HEXA: ([0-9a-fA-F]+('-')?)+;

@@ -9,16 +9,17 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=false)
 @ToString
 @AllArgsConstructor
-public class ActionRule implements Node {
-	public enum ActionType {
-		QUEUE_TO, ROUTE_TO
+public class AgentStatusNode implements Node {
+	public enum AgentStatus {
+		LEAST_BUSY, HIGHER_RANKING;		
 	}
 	
-	private final ActionType action;
+	private final AgentStatus agentStatus;
+	
 	
 	@Override
 	public NodeType getNodeType() {
-		return NodeType.ACTIONRULE;
+		return NodeType.AGENT_STATUS;
 	}
 
 }

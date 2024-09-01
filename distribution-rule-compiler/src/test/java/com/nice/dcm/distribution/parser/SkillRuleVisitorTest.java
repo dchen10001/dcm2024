@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
+import com.nice.dcm.distribution.parser.rule.AgentStatusNode.AgentStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
 import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
-import com.nice.dcm.distribution.parser.rule.RoutingRule.Agent_Status;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
@@ -120,7 +120,7 @@ class SkillRuleVisitorTest {
 			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 6:8 mismatched input '<EOF>' expecting 'queue to'", 
+			Assertions.assertEquals("line 6:8 mismatched input '<EOF>' expecting {'queue to', 'route to'}", 
 					e.getMessage());
 		}
 		
@@ -136,7 +136,7 @@ class SkillRuleVisitorTest {
 			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 5:0 mismatched input 'wait' expecting 'queue to'", 
+			Assertions.assertEquals("line 5:0 mismatched input 'wait' expecting {'queue to', 'route to'}", 
 					e.getMessage());
 		}
 		
@@ -250,7 +250,7 @@ class SkillRuleVisitorTest {
 		Node rule = util.vistorRoutingRule(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRule);
 		RoutingRule routingRule = ((RoutingRule)rule);
-		Assertions.assertEquals(Agent_Status.LEAST_BUSY, routingRule.getStatus());
+		Assertions.assertEquals(AgentStatus.LEAST_BUSY, routingRule.getAgentStatus());
 		Assertions.assertEquals(ActionType.QUEUE_TO, routingRule.getAction().getAction());
 		Assertions.assertEquals(1, routingRule.getPriority());
 		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
@@ -259,7 +259,7 @@ class SkillRuleVisitorTest {
 		rule = util.vistorRoutingRule(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRule);
 		routingRule = ((RoutingRule)rule);
-		Assertions.assertNull(routingRule.getStatus());
+		Assertions.assertNull(routingRule.getAgentStatus());
 		Assertions.assertEquals(1, routingRule.getPriority());
 		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
 		
@@ -317,11 +317,11 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(ActionType.QUEUE_TO, ((ActionRule)rule).getAction());
 		
 		try {
-			script = "route to";
+			script = "append to";
 			util.vistorRuleAction(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 1:0 token recognition error at: 'r'", 
+			Assertions.assertEquals("line 1:1 token recognition error at: 'p'", 
 					e.getMessage());
 		}
 	}
@@ -347,7 +347,7 @@ class SkillRuleVisitorTest {
 			util.vistorWait(script, visitor);
 			Assertions.fail("Invalid vistorWait");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 1:0 token recognition error at: 'r'", 
+			Assertions.assertEquals("line 1:0 token recognition error at: 're'", 
 					e.getMessage());
 		}
 	}

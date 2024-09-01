@@ -17,30 +17,32 @@ public class DistributionRulesParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, AGENT_STATUS=6, NUMBER=7, UUID_OR_HEXA=8, 
-		WHITESPACE=9;
+		T__0=1, T__1=2, T__2=3, T__3=4, LEAST_BUSY=5, HIGHER_RANKING=6, QUEUE_TO=7, 
+		ROUTE_TO=8, NUMBER=9, UUID_OR_HEXA=10, WHITESPACE=11;
 	public static final int
 		RULE_routingRuleSet = 0, RULE_routingWaitingRuleGroup = 1, RULE_routingRuleGroup = 2, 
 		RULE_routingRule = 3, RULE_ruleAction = 4, RULE_andSkills = 5, RULE_skill = 6, 
-		RULE_entity_identifier = 7, RULE_order = 8, RULE_waitRule = 9;
+		RULE_entity_identifier = 7, RULE_order = 8, RULE_waitRule = 9, RULE_agent_status = 10;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"routingRuleSet", "routingWaitingRuleGroup", "routingRuleGroup", "routingRule", 
-			"ruleAction", "andSkills", "skill", "entity_identifier", "order", "waitRule"
+			"ruleAction", "andSkills", "skill", "entity_identifier", "order", "waitRule", 
+			"agent_status"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
 
 	private static String[] makeLiteralNames() {
 		return new String[] {
-			null, "'queue to'", "'and'", "'@S:'", "'with priority'", "'wait'"
+			null, "'and'", "'@S:'", "'with priority'", "'wait'", "'least busy of'", 
+			"'higher ranking of'", "'queue to'", "'route to'"
 		};
 	}
 	private static final String[] _LITERAL_NAMES = makeLiteralNames();
 	private static String[] makeSymbolicNames() {
 		return new String[] {
-			null, null, null, null, null, null, "AGENT_STATUS", "NUMBER", "UUID_OR_HEXA", 
-			"WHITESPACE"
+			null, null, null, null, null, "LEAST_BUSY", "HIGHER_RANKING", "QUEUE_TO", 
+			"ROUTE_TO", "NUMBER", "UUID_OR_HEXA", "WHITESPACE"
 		};
 	}
 	private static final String[] _SYMBOLIC_NAMES = makeSymbolicNames();
@@ -132,23 +134,23 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(20);
+			setState(22);
 			routingRuleGroup();
-			setState(24);
+			setState(26);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__4) {
+			while (_la==T__3) {
 				{
 				{
-				setState(21);
+				setState(23);
 				routingWaitingRuleGroup();
 				}
 				}
-				setState(26);
+				setState(28);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(27);
+			setState(29);
 			match(EOF);
 			}
 		}
@@ -196,9 +198,9 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29);
+			setState(31);
 			waitRule();
-			setState(30);
+			setState(32);
 			routingRuleGroup();
 			}
 		}
@@ -247,20 +249,20 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(33); 
+			setState(35); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(32);
+				setState(34);
 				routingRule();
 				}
 				}
-				setState(35); 
+				setState(37); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( _la==T__0 );
+			} while ( _la==QUEUE_TO || _la==ROUTE_TO );
 			}
 		}
 		catch (RecognitionException re) {
@@ -285,7 +287,9 @@ public class DistributionRulesParser extends Parser {
 		public OrderContext order() {
 			return getRuleContext(OrderContext.class,0);
 		}
-		public TerminalNode AGENT_STATUS() { return getToken(DistributionRulesParser.AGENT_STATUS, 0); }
+		public Agent_statusContext agent_status() {
+			return getRuleContext(Agent_statusContext.class,0);
+		}
 		public RoutingRuleContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -312,21 +316,21 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(37);
-			ruleAction();
 			setState(39);
+			ruleAction();
+			setState(41);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			if (_la==AGENT_STATUS) {
+			if (_la==LEAST_BUSY || _la==HIGHER_RANKING) {
 				{
-				setState(38);
-				match(AGENT_STATUS);
+				setState(40);
+				agent_status();
 				}
 			}
 
-			setState(41);
+			setState(43);
 			andSkills();
-			setState(42);
+			setState(44);
 			order();
 			}
 		}
@@ -343,6 +347,8 @@ public class DistributionRulesParser extends Parser {
 
 	@SuppressWarnings("CheckReturnValue")
 	public static class RuleActionContext extends ParserRuleContext {
+		public TerminalNode QUEUE_TO() { return getToken(DistributionRulesParser.QUEUE_TO, 0); }
+		public TerminalNode ROUTE_TO() { return getToken(DistributionRulesParser.ROUTE_TO, 0); }
 		public RuleActionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -365,11 +371,20 @@ public class DistributionRulesParser extends Parser {
 	public final RuleActionContext ruleAction() throws RecognitionException {
 		RuleActionContext _localctx = new RuleActionContext(_ctx, getState());
 		enterRule(_localctx, 8, RULE_ruleAction);
+		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(44);
-			match(T__0);
+			setState(46);
+			_la = _input.LA(1);
+			if ( !(_la==QUEUE_TO || _la==ROUTE_TO) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -417,21 +432,21 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(46);
+			setState(48);
 			skill();
-			setState(51);
+			setState(53);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
-			while (_la==T__1) {
+			while (_la==T__0) {
 				{
 				{
-				setState(47);
-				match(T__1);
-				setState(48);
+				setState(49);
+				match(T__0);
+				setState(50);
 				skill();
 				}
 				}
-				setState(53);
+				setState(55);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -478,9 +493,9 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(54);
-			match(T__2);
-			setState(55);
+			setState(56);
+			match(T__1);
+			setState(57);
 			entity_identifier();
 			}
 		}
@@ -525,7 +540,7 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(57);
+			setState(59);
 			_la = _input.LA(1);
 			if ( !(_la==NUMBER || _la==UUID_OR_HEXA) ) {
 			_errHandler.recoverInline(this);
@@ -576,9 +591,9 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(59);
-			match(T__3);
-			setState(60);
+			setState(61);
+			match(T__2);
+			setState(62);
 			match(NUMBER);
 			}
 		}
@@ -621,9 +636,9 @@ public class DistributionRulesParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(62);
-			match(T__4);
-			setState(63);
+			setState(64);
+			match(T__3);
+			setState(65);
 			match(NUMBER);
 			}
 		}
@@ -638,43 +653,98 @@ public class DistributionRulesParser extends Parser {
 		return _localctx;
 	}
 
+	@SuppressWarnings("CheckReturnValue")
+	public static class Agent_statusContext extends ParserRuleContext {
+		public TerminalNode LEAST_BUSY() { return getToken(DistributionRulesParser.LEAST_BUSY, 0); }
+		public TerminalNode HIGHER_RANKING() { return getToken(DistributionRulesParser.HIGHER_RANKING, 0); }
+		public Agent_statusContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_agent_status; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).enterAgent_status(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).exitAgent_status(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof DistributionRulesVisitor ) return ((DistributionRulesVisitor<? extends T>)visitor).visitAgent_status(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final Agent_statusContext agent_status() throws RecognitionException {
+		Agent_statusContext _localctx = new Agent_statusContext(_ctx, getState());
+		enterRule(_localctx, 20, RULE_agent_status);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(67);
+			_la = _input.LA(1);
+			if ( !(_la==LEAST_BUSY || _la==HIGHER_RANKING) ) {
+			_errHandler.recoverInline(this);
+			}
+			else {
+				if ( _input.LA(1)==Token.EOF ) matchedEOF = true;
+				_errHandler.reportMatch(this);
+				consume();
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static final String _serializedATN =
-		"\u0004\u0001\tB\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
+		"\u0004\u0001\u000bF\u0002\u0000\u0007\u0000\u0002\u0001\u0007\u0001\u0002"+
 		"\u0002\u0007\u0002\u0002\u0003\u0007\u0003\u0002\u0004\u0007\u0004\u0002"+
 		"\u0005\u0007\u0005\u0002\u0006\u0007\u0006\u0002\u0007\u0007\u0007\u0002"+
-		"\b\u0007\b\u0002\t\u0007\t\u0001\u0000\u0001\u0000\u0005\u0000\u0017\b"+
-		"\u0000\n\u0000\f\u0000\u001a\t\u0000\u0001\u0000\u0001\u0000\u0001\u0001"+
-		"\u0001\u0001\u0001\u0001\u0001\u0002\u0004\u0002\"\b\u0002\u000b\u0002"+
-		"\f\u0002#\u0001\u0003\u0001\u0003\u0003\u0003(\b\u0003\u0001\u0003\u0001"+
-		"\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001\u0005\u0001\u0005\u0001"+
-		"\u0005\u0005\u00052\b\u0005\n\u0005\f\u00055\t\u0005\u0001\u0006\u0001"+
-		"\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001\b\u0001\b\u0001\b\u0001"+
-		"\t\u0001\t\u0001\t\u0001\t\u0000\u0000\n\u0000\u0002\u0004\u0006\b\n\f"+
-		"\u000e\u0010\u0012\u0000\u0001\u0001\u0000\u0007\b;\u0000\u0014\u0001"+
-		"\u0000\u0000\u0000\u0002\u001d\u0001\u0000\u0000\u0000\u0004!\u0001\u0000"+
-		"\u0000\u0000\u0006%\u0001\u0000\u0000\u0000\b,\u0001\u0000\u0000\u0000"+
-		"\n.\u0001\u0000\u0000\u0000\f6\u0001\u0000\u0000\u0000\u000e9\u0001\u0000"+
-		"\u0000\u0000\u0010;\u0001\u0000\u0000\u0000\u0012>\u0001\u0000\u0000\u0000"+
-		"\u0014\u0018\u0003\u0004\u0002\u0000\u0015\u0017\u0003\u0002\u0001\u0000"+
-		"\u0016\u0015\u0001\u0000\u0000\u0000\u0017\u001a\u0001\u0000\u0000\u0000"+
-		"\u0018\u0016\u0001\u0000\u0000\u0000\u0018\u0019\u0001\u0000\u0000\u0000"+
-		"\u0019\u001b\u0001\u0000\u0000\u0000\u001a\u0018\u0001\u0000\u0000\u0000"+
-		"\u001b\u001c\u0005\u0000\u0000\u0001\u001c\u0001\u0001\u0000\u0000\u0000"+
-		"\u001d\u001e\u0003\u0012\t\u0000\u001e\u001f\u0003\u0004\u0002\u0000\u001f"+
-		"\u0003\u0001\u0000\u0000\u0000 \"\u0003\u0006\u0003\u0000! \u0001\u0000"+
-		"\u0000\u0000\"#\u0001\u0000\u0000\u0000#!\u0001\u0000\u0000\u0000#$\u0001"+
-		"\u0000\u0000\u0000$\u0005\u0001\u0000\u0000\u0000%\'\u0003\b\u0004\u0000"+
-		"&(\u0005\u0006\u0000\u0000\'&\u0001\u0000\u0000\u0000\'(\u0001\u0000\u0000"+
-		"\u0000()\u0001\u0000\u0000\u0000)*\u0003\n\u0005\u0000*+\u0003\u0010\b"+
-		"\u0000+\u0007\u0001\u0000\u0000\u0000,-\u0005\u0001\u0000\u0000-\t\u0001"+
-		"\u0000\u0000\u0000.3\u0003\f\u0006\u0000/0\u0005\u0002\u0000\u000002\u0003"+
-		"\f\u0006\u00001/\u0001\u0000\u0000\u000025\u0001\u0000\u0000\u000031\u0001"+
-		"\u0000\u0000\u000034\u0001\u0000\u0000\u00004\u000b\u0001\u0000\u0000"+
-		"\u000053\u0001\u0000\u0000\u000067\u0005\u0003\u0000\u000078\u0003\u000e"+
-		"\u0007\u00008\r\u0001\u0000\u0000\u00009:\u0007\u0000\u0000\u0000:\u000f"+
-		"\u0001\u0000\u0000\u0000;<\u0005\u0004\u0000\u0000<=\u0005\u0007\u0000"+
-		"\u0000=\u0011\u0001\u0000\u0000\u0000>?\u0005\u0005\u0000\u0000?@\u0005"+
-		"\u0007\u0000\u0000@\u0013\u0001\u0000\u0000\u0000\u0004\u0018#\'3";
+		"\b\u0007\b\u0002\t\u0007\t\u0002\n\u0007\n\u0001\u0000\u0001\u0000\u0005"+
+		"\u0000\u0019\b\u0000\n\u0000\f\u0000\u001c\t\u0000\u0001\u0000\u0001\u0000"+
+		"\u0001\u0001\u0001\u0001\u0001\u0001\u0001\u0002\u0004\u0002$\b\u0002"+
+		"\u000b\u0002\f\u0002%\u0001\u0003\u0001\u0003\u0003\u0003*\b\u0003\u0001"+
+		"\u0003\u0001\u0003\u0001\u0003\u0001\u0004\u0001\u0004\u0001\u0005\u0001"+
+		"\u0005\u0001\u0005\u0005\u00054\b\u0005\n\u0005\f\u00057\t\u0005\u0001"+
+		"\u0006\u0001\u0006\u0001\u0006\u0001\u0007\u0001\u0007\u0001\b\u0001\b"+
+		"\u0001\b\u0001\t\u0001\t\u0001\t\u0001\n\u0001\n\u0001\n\u0000\u0000\u000b"+
+		"\u0000\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014\u0000\u0003\u0001"+
+		"\u0000\u0007\b\u0001\u0000\t\n\u0001\u0000\u0005\u0006>\u0000\u0016\u0001"+
+		"\u0000\u0000\u0000\u0002\u001f\u0001\u0000\u0000\u0000\u0004#\u0001\u0000"+
+		"\u0000\u0000\u0006\'\u0001\u0000\u0000\u0000\b.\u0001\u0000\u0000\u0000"+
+		"\n0\u0001\u0000\u0000\u0000\f8\u0001\u0000\u0000\u0000\u000e;\u0001\u0000"+
+		"\u0000\u0000\u0010=\u0001\u0000\u0000\u0000\u0012@\u0001\u0000\u0000\u0000"+
+		"\u0014C\u0001\u0000\u0000\u0000\u0016\u001a\u0003\u0004\u0002\u0000\u0017"+
+		"\u0019\u0003\u0002\u0001\u0000\u0018\u0017\u0001\u0000\u0000\u0000\u0019"+
+		"\u001c\u0001\u0000\u0000\u0000\u001a\u0018\u0001\u0000\u0000\u0000\u001a"+
+		"\u001b\u0001\u0000\u0000\u0000\u001b\u001d\u0001\u0000\u0000\u0000\u001c"+
+		"\u001a\u0001\u0000\u0000\u0000\u001d\u001e\u0005\u0000\u0000\u0001\u001e"+
+		"\u0001\u0001\u0000\u0000\u0000\u001f \u0003\u0012\t\u0000 !\u0003\u0004"+
+		"\u0002\u0000!\u0003\u0001\u0000\u0000\u0000\"$\u0003\u0006\u0003\u0000"+
+		"#\"\u0001\u0000\u0000\u0000$%\u0001\u0000\u0000\u0000%#\u0001\u0000\u0000"+
+		"\u0000%&\u0001\u0000\u0000\u0000&\u0005\u0001\u0000\u0000\u0000\')\u0003"+
+		"\b\u0004\u0000(*\u0003\u0014\n\u0000)(\u0001\u0000\u0000\u0000)*\u0001"+
+		"\u0000\u0000\u0000*+\u0001\u0000\u0000\u0000+,\u0003\n\u0005\u0000,-\u0003"+
+		"\u0010\b\u0000-\u0007\u0001\u0000\u0000\u0000./\u0007\u0000\u0000\u0000"+
+		"/\t\u0001\u0000\u0000\u000005\u0003\f\u0006\u000012\u0005\u0001\u0000"+
+		"\u000024\u0003\f\u0006\u000031\u0001\u0000\u0000\u000047\u0001\u0000\u0000"+
+		"\u000053\u0001\u0000\u0000\u000056\u0001\u0000\u0000\u00006\u000b\u0001"+
+		"\u0000\u0000\u000075\u0001\u0000\u0000\u000089\u0005\u0002\u0000\u0000"+
+		"9:\u0003\u000e\u0007\u0000:\r\u0001\u0000\u0000\u0000;<\u0007\u0001\u0000"+
+		"\u0000<\u000f\u0001\u0000\u0000\u0000=>\u0005\u0003\u0000\u0000>?\u0005"+
+		"\t\u0000\u0000?\u0011\u0001\u0000\u0000\u0000@A\u0005\u0004\u0000\u0000"+
+		"AB\u0005\t\u0000\u0000B\u0013\u0001\u0000\u0000\u0000CD\u0007\u0002\u0000"+
+		"\u0000D\u0015\u0001\u0000\u0000\u0000\u0004\u001a%)5";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -13,6 +13,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import com.nice.dcm.distribution.parser.DistributionRulesParser.Agent_statusContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.AndSkillsContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.Entity_identifierContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.OrderContext;
@@ -25,12 +26,13 @@ import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
+import com.nice.dcm.distribution.parser.rule.AgentStatusNode;
+import com.nice.dcm.distribution.parser.rule.AgentStatusNode.AgentStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
 import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
-import com.nice.dcm.distribution.parser.rule.RoutingRule.Agent_Status;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
@@ -105,22 +107,38 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 
 	@Override
 	public Node visitRoutingRule(RoutingRuleContext ctx) {
-		ActionRule action = (ActionRule)visitRuleAction(ctx.ruleAction());
+		ActionRule action = (ActionRule)visitRuleAction(ctx.ruleAction());		
 		AndSkillsRule skill = (AndSkillsRule)visitAndSkills(ctx.andSkills());
 		OrderRule order = (OrderRule)visitOrder(ctx.order());
 		Set<String> skillOids = skill.getSkills()
 			.stream()
 			.map(SkillRule::getSkillOid)
 			.collect(Collectors.toCollection(() -> new TreeSet<>()));
-		return new RoutingRule(action, skillOids, order.getPriority(),
-				toAgentStatus(ctx.AGENT_STATUS()));
+		
+		AgentStatus agentStatus = null;
+		if(ctx.agent_status() != null) {
+			AgentStatusNode agentStatusNode =  (AgentStatusNode)visitAgent_status(ctx.agent_status());			
+			agentStatus = agentStatusNode.getAgentStatus();
+		}
+		return new RoutingRule(action, skillOids, order.getPriority(), agentStatus);
 	}
 	
 	@Override
+	public Node visitAgent_status(Agent_statusContext ctx) {
+		if(ctx.LEAST_BUSY() != null) {
+			return new AgentStatusNode(AgentStatus.LEAST_BUSY);
+		} else if(ctx.HIGHER_RANKING() != null) {
+			return new AgentStatusNode(AgentStatus.HIGHER_RANKING);
+		}
+		return null;
+	}
+
+	@Override
 	public Node visitRuleAction(RuleActionContext ctx) {
-		String action = ctx.getText();
-		if("queue to".equals(action)) {
+		if(ctx.QUEUE_TO() != null) {
 			return new ActionRule(ActionType.QUEUE_TO);
+		} else if(ctx.ROUTE_TO() != null) {
+			return new ActionRule(ActionType.ROUTE_TO);
 		}
 		return null;
 	}
@@ -152,13 +170,6 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 
 	private int toNumber(TerminalNode node) {
 		return Integer.parseInt(node.getText());
-	}
-	
-	private Agent_Status toAgentStatus(TerminalNode node) {
-		if(node == null) {
-			return null;
-		} 
-		return Agent_Status.findByValue(node.getText());
 	}
 
 	@Override
