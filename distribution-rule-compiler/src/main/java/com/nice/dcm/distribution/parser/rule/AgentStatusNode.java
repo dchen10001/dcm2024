@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class AgentStatusNode implements Node {
 	public enum AgentStatus {
-		LEAST_BUSY, HIGHER_RANKING;		
+		LEAST_BUSY;		
 	}
 	
 	private final AgentStatus agentStatus;

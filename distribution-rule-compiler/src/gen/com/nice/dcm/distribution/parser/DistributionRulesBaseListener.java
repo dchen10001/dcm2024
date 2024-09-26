@@ -89,6 +89,30 @@ public class DistributionRulesBaseListener implements DistributionRulesListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSkillOrSet(DistributionRulesParser.SkillOrSetContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSkillOrSet(DistributionRulesParser.SkillOrSetContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSkillSet(DistributionRulesParser.SkillSetContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSkillSet(DistributionRulesParser.SkillSetContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterSkill(DistributionRulesParser.SkillContext ctx) { }
 	/**
 	 * {@inheritDoc}

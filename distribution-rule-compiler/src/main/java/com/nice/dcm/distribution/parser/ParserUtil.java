@@ -48,6 +48,16 @@ public class ParserUtil {
     	return parser.andSkills().accept(vistor);    
     }
     
+    public <T> T vistorSkillSet(String script, DistributionRulesVisitor<T> vistor) {
+        DistributionRulesParser parser = parserScript(script);
+        return parser.skillSet().accept(vistor);    
+    }
+    
+    public <T> T vistorSkillOrSet(String script, DistributionRulesVisitor<T> vistor) {
+        DistributionRulesParser parser = parserScript(script);
+        return parser.skillOrSet().accept(vistor);    
+    }
+    
     public <T> T vistorRuleAction(String script, DistributionRulesVisitor<T> vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return parser.ruleAction().accept(vistor);    

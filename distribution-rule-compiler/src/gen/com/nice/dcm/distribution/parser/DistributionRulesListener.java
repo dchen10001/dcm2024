@@ -68,6 +68,26 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 */
 	void exitAndSkills(DistributionRulesParser.AndSkillsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#skillOrSet}.
+	 * @param ctx the parse tree
+	 */
+	void enterSkillOrSet(DistributionRulesParser.SkillOrSetContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#skillOrSet}.
+	 * @param ctx the parse tree
+	 */
+	void exitSkillOrSet(DistributionRulesParser.SkillOrSetContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#skillSet}.
+	 * @param ctx the parse tree
+	 */
+	void enterSkillSet(DistributionRulesParser.SkillSetContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#skillSet}.
+	 * @param ctx the parse tree
+	 */
+	void exitSkillSet(DistributionRulesParser.SkillSetContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#skill}.
 	 * @param ctx the parse tree
 	 */

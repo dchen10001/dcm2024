@@ -1,6 +1,9 @@
 package com.nice.dcm.distribution.parser;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -23,6 +26,8 @@ import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingRuleSetCo
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingWaitingRuleGroupContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RuleActionContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillOrSetContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillSetContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
@@ -36,6 +41,7 @@ import com.nice.dcm.distribution.parser.rule.RoutingRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
+import com.nice.dcm.distribution.parser.rule.SkillSetRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
 public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
@@ -83,7 +89,7 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 	
 	@Override
 	public Node visitRoutingRuleGroup(RoutingRuleGroupContext ctx) {
-		Map<Set<String>, Integer> duplicatedCheck = new HashMap<>();
+		Map<Set<Collection<String>>, Integer> duplicatedCheck = new HashMap<>();
 		Set<RoutingRule> rules = new TreeSet<>();
 		
 		for(RoutingRuleContext r : ctx.routingRule()) {
@@ -110,25 +116,20 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 		ActionRule action = (ActionRule)visitRuleAction(ctx.ruleAction());		
 		AndSkillsRule skill = (AndSkillsRule)visitAndSkills(ctx.andSkills());
 		OrderRule order = (OrderRule)visitOrder(ctx.order());
-		Set<String> skillOids = skill.getSkills()
-			.stream()
-			.map(SkillRule::getSkillOid)
-			.collect(Collectors.toCollection(() -> new TreeSet<>()));
+		Set<Collection<String>> skills = skill.getSkills();
 		
 		AgentStatus agentStatus = null;
 		if(ctx.agent_status() != null) {
 			AgentStatusNode agentStatusNode =  (AgentStatusNode)visitAgent_status(ctx.agent_status());			
 			agentStatus = agentStatusNode.getAgentStatus();
 		}
-		return new RoutingRule(action, skillOids, order.getPriority(), agentStatus);
+		return new RoutingRule(action, skills, order.getPriority(), agentStatus);
 	}
 	
 	@Override
 	public Node visitAgent_status(Agent_statusContext ctx) {
 		if(ctx.LEAST_BUSY() != null) {
 			return new AgentStatusNode(AgentStatus.LEAST_BUSY);
-		} else if(ctx.HIGHER_RANKING() != null) {
-			return new AgentStatusNode(AgentStatus.HIGHER_RANKING);
 		}
 		return null;
 	}
@@ -137,8 +138,6 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 	public Node visitRuleAction(RuleActionContext ctx) {
 		if(ctx.QUEUE_TO() != null) {
 			return new ActionRule(ActionType.QUEUE_TO);
-		} else if(ctx.ROUTE_TO() != null) {
-			return new ActionRule(ActionType.ROUTE_TO);
 		}
 		return null;
 	}
@@ -174,7 +173,44 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 
 	@Override
 	public Node visitAndSkills(AndSkillsContext ctx) {
-		Set<SkillRule> skills = ctx.skill().stream().map(s -> (SkillRule)visitSkill(s)).collect(Collectors.toSet());
-		return new AndSkillsRule(skills);
+	   List<SkillOrSetContext> skills = ctx.skillOrSet();
+	   Set<Collection<String>> skillSet = new HashSet<>();
+	   for(SkillOrSetContext skill : skills) {
+	       SkillSetRule node = (SkillSetRule)visitSkillOrSet(skill);
+	       Set<String> ss = node.getSkillOids();
+	       skillSet.add(node.getSkillOids());
+	   }
+//		Set<Collection<String>> skills = ctx.skillOrSet().stream()
+//		        .map(s -> ((SkillSetRule)visitSkillOrSet(s)).getSkillOids())
+//		        .collect(Collectors.toCollection(TreeSet::new));
+		return new AndSkillsRule(skillSet);
 	}
+
+	
+    @Override
+    public Node visitSkillSet(SkillSetContext ctx) {
+        List<SkillContext> skills = ctx.skill();
+        Set<String> skillOids = new TreeSet<>();
+        for (SkillContext skill : skills) {
+            SkillRule skillRule = (SkillRule)visitSkill(skill);
+            skillOids.add(skillRule.getSkillOid());
+        }
+        return new SkillSetRule(skillOids);
+    }
+
+    @Override
+    public Node visitSkillOrSet(SkillOrSetContext ctx) {
+        SkillSetContext skillSet = ctx.skillSet();
+        Set<String> skillOids = null;
+        if (skillSet != null) {
+            SkillSetRule subNode = (SkillSetRule)visitSkillSet(skillSet);
+            skillOids = subNode.getSkillOids();
+        } else {
+            SkillContext skill = ctx.skill();
+            SkillRule subNode = (SkillRule)visitSkill(skill);
+            skillOids = new TreeSet<>();
+            skillOids.add(subNode.getSkillOid());
+        }
+        return new SkillSetRule(skillOids);
+    }
 }

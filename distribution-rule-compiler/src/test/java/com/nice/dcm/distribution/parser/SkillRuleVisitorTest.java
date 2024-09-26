@@ -18,6 +18,7 @@ import com.nice.dcm.distribution.parser.rule.RoutingRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
+import com.nice.dcm.distribution.parser.rule.SkillSetRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
 class SkillRuleVisitorTest {
@@ -26,12 +27,14 @@ class SkillRuleVisitorTest {
 	
 	@Test
 	void routingRuleSetTest() {
-		String script = "queue to @S: a2 with priority 2 \n" +
-						"queue to @S: a1 with priority 1" + 
-					    "wait 20 \n" +
-					    "queue to @S: a4 with priority 4 \n" +
-					    "wait 10 \n" +
-					    "queue to @S: a3 with priority 3 \n";
+		String script = """
+		                queue to @S: a2 with priority 2
+						queue to @S: a1 with priority 1
+					    wait 20
+					    queue to @S: a4 with priority 4
+					    wait 10
+					    queue to @S: a3 with priority 3    
+		            """;
 		RoutingRuleSet rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
 		Assertions.assertEquals(3, rule.getRoutingRuleGroups().size());
 		RoutingRuleGroup g1 = rule.getRoutingRuleGroups().get(0);
@@ -49,13 +52,15 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(Set.of("a4"), g3.getRoutingRules().get(0).getSkills());
 		
 
-		script = "queue to @S: a2 and @S: a2 with priority 2 \n" +
-				"queue to @S: a1 with priority 1" + 
-				"queue to @S: a1 with priority 1" + 
-			    "wait 20 \n" +
-			    "queue to @S: a4 with priority 4 \n" +
-			    "wait 10 \n" +
-			    "queue to @S: a3 with priority 3 \n";
+		script = """
+		        queue to @S:a2 and @S:a2 with priority 2
+				queue to @S:a1 with priority 1 
+				queue to @S:a1 with priority 1 
+			    wait 20
+			    queue to @S:a4 with priority 4
+			    wait 10
+			    queue to @S:a3 with priority 3
+		        """;
 			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
 			Assertions.assertEquals(3, rule.getRoutingRuleGroups().size());
 			 g1 = rule.getRoutingRuleGroups().get(0);
@@ -86,8 +91,10 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(2, r.getPriority());
 		Assertions.assertEquals(Set.of("a2"), r.getSkills());
 		
-		script = "queue to @S: a2 with priority 2 \n" +
-				"queue to @S: a1 with priority 1";
+		script = """ 
+		        queue to @S: a2 with priority 2
+				queue to @S: a1 with priority 1
+		        """;
 		rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
 		Assertions.assertEquals(1, rule.getRoutingRuleGroups().size());
 		g1 = rule.getRoutingRuleGroups().get(0);
@@ -95,48 +102,54 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(2, g1.getRoutingRules().size());
 		
 		try {
-			script = "queue to @S: a2 and @S: a2 with priority 2 \n" +
-					"queue to @S: a1 with priority 1" + 
-					"queue to @S: a1 with priority 2" + 
-				    "wait 20 \n" +
-				    "queue to @S: a4 with priority 4 \n" +
-				    "wait 10 \n" +
-				    "queue to @S: a3 with priority 3 \n";
-			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			script = """
+			        queue to @S:a2 and @S:a2 with priority 2
+					queue to @S:a1 with priority 1
+					queue to @S:a1 with priority 2
+				    wait 20
+				    queue to @S:a4 with priority 4
+				    wait 10
+				    queue to @S:a3 with priority 3
+				    """;
+			util.vistorRoutingRuleSet(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 2:31. Duplicated rule with different priority. One is 1 and one is 2", 
+			Assertions.assertEquals("line 3:0. Duplicated rule with different priority. One is 1 and one is 2", 
 					e.getMessage());
 		}
 		
 		try {
-			script = "queue to @S: a2 with priority 2 \n" +
-					"queue to @S: a1 with priority 1" + 
-				    "wait 20 \n" +
-				    "queue to @S: a4 with priority 4 \n" +
-				    "wait 10 \n" +
-				    "queue to @S: a3 with priority 3 \n" +
-				    "wait 100";
-			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			script = """
+			        queue to @S: a2 with priority 2
+					queue to @S: a1 with priority 1
+				    wait 20
+				    queue to @S: a4 with priority 4
+				    wait 10
+				    queue to @S: a3 with priority 3
+				    wait 100
+			        """;
+			util.vistorRoutingRuleSet(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 6:8 mismatched input '<EOF>' expecting {'queue to', 'route to'}", 
+			Assertions.assertEquals("line 8:0 mismatched input '<EOF>' expecting 'queue to'", 
 					e.getMessage());
 		}
 		
 		try {
-			script = "queue to @S: a2 with priority 2 \n" +
-					"queue to @S: a1 with priority 1" + 
-					"wait 20 \n" +
-					"queue to @S: a4 with priority 4 \n" +
-					"wait 10 \n" +
-					"wait 10 \n" +
-					"queue to @S: a3 with priority 3 \n";
+			script = """
+			        queue to @S: a2 with priority 2
+					queue to @S: a1 with priority 1
+					wait 20
+					queue to @S: a4 with priority 4
+					wait 10
+					wait 10
+					queue to @S: a3 with priority 3 
+			        """;
 			
-			rule = (RoutingRuleSet)util.vistorRoutingRuleSet(script, visitor);
+			util.vistorRoutingRuleSet(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 5:0 mismatched input 'wait' expecting {'queue to', 'route to'}", 
+			Assertions.assertEquals("line 6:0 mismatched input 'wait' expecting 'queue to'", 
 					e.getMessage());
 		}
 		
@@ -145,8 +158,10 @@ class SkillRuleVisitorTest {
 	@Test
 	void routingWaitRuleGroupTest() {
 		
-		String script = "wait 10 \n" +
-				"queue to @S: a1 with priority 1";
+		String script = """
+		        	    wait 10
+		        		queue to @S: a1 with priority 1
+		        """;
 		
 		Node rule = util.vistorRoutingWaitRuleGroup(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRuleGroup);
@@ -162,9 +177,11 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
 		
 		
-		script = "wait 10 \n" +
-				"queue to @S: a2 with priority 2 \n" +
-				"queue to @S: a1 with priority 1";
+		script = """
+		        wait 10
+				queue to @S: a2 with priority 2
+				queue to @S: a1 with priority 1
+		        """;
 		
 		rule = util.vistorRoutingWaitRuleGroup(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRuleGroup);
@@ -181,7 +198,7 @@ class SkillRuleVisitorTest {
 		
 		try {
 			script = "queue to @S: a1 with priority 1";
-			rule = util.vistorRoutingWaitRuleGroup(script, visitor);
+			util.vistorRoutingWaitRuleGroup(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
 			Assertions.assertEquals("line 1:0 mismatched input 'queue to' expecting 'wait'", 
@@ -189,13 +206,15 @@ class SkillRuleVisitorTest {
 		}
 		
 		try {
-			script = "test queue to @S: a2 with priority 2 \n" +
-					"wait 10 \n" + 
-					"queue to @S: a1 with priority 1";
-			rule = util.vistorRoutingWaitRuleGroup(script, visitor);
+			script = """
+			        test queue to @S: a2 with priority 2
+					wait 10 
+					queue to @S: a1 with priority 1
+			        """;
+			util.vistorRoutingWaitRuleGroup(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 1:0 token recognition error at: 't'", 
+			Assertions.assertEquals("line 1:6 token recognition error at: 't'", 
 					e.getMessage());
 		}
 	}
@@ -216,9 +235,10 @@ class SkillRuleVisitorTest {
 		Assertions.assertEquals(Set.of("a1"), routingRule.getSkills());
 		
 		
-		script = "queue to @S: a2 with priority 2 \n" +
-					"queue to @S: a1 with priority 1";
-		
+		script = """
+		        queue to @S: a2 with priority 2
+				queue to @S: a1 with priority 1
+		        """;
 		rule = util.vistorRoutingRuleGroup(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRuleGroup);
 		routingRuleGroup = ((RoutingRuleGroup)rule);
@@ -232,13 +252,15 @@ class SkillRuleVisitorTest {
 		}
 		
 		try {
-			script = "test queue to @S: a2 with priority 2 \n" +
-					"wait 10 \n" + 
-					"queue to @S: a1 with priority 1";
-			rule = util.vistorRoutingRuleGroup(script, visitor);
+			script = """
+			        test queue to @S: a2 with priority 2
+					wait 10 
+					queue to @S: a1 with priority 1
+			        """;
+			util.vistorRoutingRuleGroup(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 1:0 token recognition error at: 't'", 
+			Assertions.assertEquals("line 1:6 token recognition error at: 't'", 
 					e.getMessage());
 		}
 	}
@@ -271,19 +293,9 @@ class SkillRuleVisitorTest {
 		Assertions.assertTrue(routingRule.getSkills() instanceof TreeSet);
 		Assertions.assertEquals(Set.of("a1", "a2"), routingRule.getSkills());
 		
-		
-//		try {
-//			script = "queue to @S: a1 with priority 1 wait";
-//			rule = util.vistorRoutingRule(script, visitor);
-//			Assertions.fail("Invalid queue to");
-//		} catch(ParseCancellationException e) {
-//			Assertions.assertEquals("line 1:32 extraneous input 'wait' expecting <EOF>", 
-//					e.getMessage());
-//		}
-		
 		try {
 			script = "test queue to @S: a1";
-			rule = util.vistorRoutingRule(script, visitor);
+			util.vistorRoutingRule(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
 			Assertions.assertEquals("line 1:0 token recognition error at: 't'", 
@@ -292,7 +304,7 @@ class SkillRuleVisitorTest {
 		
 		try {
 			script = "queue to @S: a1";
-			rule = util.vistorRoutingRule(script, visitor);
+			util.vistorRoutingRule(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
 			Assertions.assertEquals("line 1:15 mismatched input '<EOF>' expecting {'and', 'with priority'}", 
@@ -301,7 +313,7 @@ class SkillRuleVisitorTest {
 		
 		try {
 			script = "queue to @S: a1 or @S: a1 with priority 1";
-			rule = util.vistorRoutingRule(script, visitor);
+			util.vistorRoutingRule(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
 			Assertions.assertEquals("line 1:16 token recognition error at: 'o'", 
@@ -347,7 +359,7 @@ class SkillRuleVisitorTest {
 			util.vistorWait(script, visitor);
 			Assertions.fail("Invalid vistorWait");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 1:0 token recognition error at: 're'", 
+			Assertions.assertEquals("line 1:0 token recognition error at: 'r'", 
 					e.getMessage());
 		}
 	}
@@ -428,7 +440,7 @@ class SkillRuleVisitorTest {
 	
 	@Test
 	void skillAndTest() {
-		String script = "@S: 1";
+		String script = "@S:1";
 		Node rule = util.vistorAndSkills(script, visitor);
 		Assertions.assertTrue(rule instanceof AndSkillsRule);
 		Assertions.assertEquals(Set.of(new SkillRule("1")), ((AndSkillsRule)rule).getSkills());
@@ -461,5 +473,59 @@ class SkillRuleVisitorTest {
 			Assertions.assertEquals("line 1:25 missing {NUMBER, UUID_OR_HEXA} at '<EOF>'", 
 					e.getMessage());
 		}
+	}
+	
+	@Test
+    void skillSetTest() {
+	    String  script = "(@S:11abcdef1111, @S:11abcdef2222)";
+	    SkillSetRule rule = (SkillSetRule)util.vistorSkillSet(script, visitor);
+	    Assertions.assertEquals(Set.of("11abcdef1111", "11abcdef2222"), rule.getSkillOids());
+	    
+	    try {
+	        script = "(@S:11abcdef1111)";
+	        util.vistorSkillSet(script, visitor);
+	        Assertions.fail("Invalid number");
+	    } catch(ParseCancellationException e) {
+	        Assertions.assertEquals("line 1:16 mismatched input ')' expecting ','", 
+	                e.getMessage());
+	    }
+	    
+	    try {
+	        script = "(@S:11abcdef1111 and @S:11abcdef1111)";
+	        util.vistorSkillSet(script, visitor);
+	        Assertions.fail("Invalid number");
+	    } catch(ParseCancellationException e) {
+	        Assertions.assertEquals("line 1:17 mismatched input 'and' expecting ','", 
+	                e.getMessage());
+	    } 
+	}
+	
+	@Test
+	void skillOrSet() {
+	    String  script = "(@S:11abcdef1111, @S:11abcdef2222)";
+	    SkillSetRule rule = (SkillSetRule)util.vistorSkillOrSet(script, visitor);
+	    Assertions.assertEquals(Set.of("11abcdef1111", "11abcdef2222"), rule.getSkillOids());
+	    
+	    script = "@S:11abcdef1111 ";
+	    rule = (SkillSetRule)util.vistorSkillOrSet(script, visitor);
+        Assertions.assertEquals(Set.of("11abcdef1111"), rule.getSkillOids());
+        
+	    try {
+	        script = "(@S:11abcdef1111)";
+	        util.vistorSkillOrSet(script, visitor);
+	        Assertions.fail("Invalid number");
+	    } catch(ParseCancellationException e) {
+	        Assertions.assertEquals("line 1:16 mismatched input ')' expecting ','", 
+	                e.getMessage());
+	    }
+	    
+	    try {
+	        script = "(@S:11abcdef1111 and @S:11abcdef1111)";
+	        util.vistorSkillOrSet(script, visitor);
+	        Assertions.fail("Invalid number");
+	    } catch(ParseCancellationException e) {
+	        Assertions.assertEquals("line 1:17 mismatched input 'and' expecting ','", 
+	                e.getMessage());
+	    } 
 	}
 }

@@ -47,6 +47,18 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAndSkills(DistributionRulesParser.AndSkillsContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#skillOrSet}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSkillOrSet(DistributionRulesParser.SkillOrSetContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#skillSet}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSkillSet(DistributionRulesParser.SkillSetContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#skill}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

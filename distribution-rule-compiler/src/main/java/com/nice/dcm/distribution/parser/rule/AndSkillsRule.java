@@ -1,5 +1,6 @@
 package com.nice.dcm.distribution.parser.rule;
 
+import java.util.Collection;
 import java.util.Set;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class AndSkillsRule implements Node {
 	
-	private final Set<SkillRule> skills;
+	private final Set<Collection<String>> skills;
 	
 	@Override
 	public NodeType getNodeType() {

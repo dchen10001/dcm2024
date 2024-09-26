@@ -8,9 +8,17 @@ routingRuleGroup: (routingRule)+;
 
 routingRule: ruleAction (agent_status)? andSkills order;
 
-ruleAction: QUEUE_TO | ROUTE_TO;
+/* if we have new action, such as ROUTE_TO, 
+* we can add it here as 
+* ruleAction: QUEUE_TO | ROUTE_TO;
+*/
+ruleAction: QUEUE_TO;
 
-andSkills: skill ('and' skill)*;
+andSkills: skillOrSet ('and' skillOrSet)*;
+
+skillOrSet: skill | skillSet;
+
+skillSet: '(' skill (',' skill)+ ')' ;
 
 skill: '@S:' entity_identifier;
 
@@ -20,15 +28,21 @@ order: 'with priority' NUMBER;
 
 waitRule: 'wait' NUMBER;
 
-agent_status: LEAST_BUSY|HIGHER_RANKING;
+/* if we have new agent status, such as HIGHER_RANKING, 
+* we can add it here as 
+* agent_status: LEAST_BUSY | HIGHER_RANKING;
+*/
+agent_status: LEAST_BUSY;
 
 // Agent status
 LEAST_BUSY: 'least busy of';
-HIGHER_RANKING: 'higher ranking of';
+// new agent status value can be added here, such as HIGHER_RANKING
+//HIGHER_RANKING: 'higher ranking of';
 
 // rule Action
 QUEUE_TO: 'queue to';
-ROUTE_TO: 'route to';
+// new action value can be added here, such as ROUTE_TO
+//ROUTE_TO: 'route to';
 
 NUMBER: [1-9]([0-9]*);
 UUID_OR_HEXA: ([0-9a-fA-F]+('-')?)+;
