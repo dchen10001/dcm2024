@@ -12,14 +12,12 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=false)
 @ToString
 @AllArgsConstructor
-public class RoutingRuleGroup implements Node , Comparable<RoutingRuleGroup> {
+public class RoutingRuleGroup implements Node {
     
 	private long waitAfterSeconds;
-    
-	//order by priority
-    private final  Set<RoutingRule> rules;
+    private final  List<RoutingRule> rules;
 
-	public RoutingRuleGroup(Set<RoutingRule> rules) {
+	public RoutingRuleGroup(List<RoutingRule> rules) {
 		super();
 		this.rules = rules;
 		this.waitAfterSeconds = 0;
@@ -40,25 +38,5 @@ public class RoutingRuleGroup implements Node , Comparable<RoutingRuleGroup> {
 
 	public boolean isWaitEnough(long waitTime) {
 		return waitTime >= waitAfterSeconds;
-	}
-	
-	public boolean containsAll(Set<String> empSkills) {
-		for(RoutingRule rule : rules) {
-			if(rule.containsAll(empSkills)) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public int compareTo(RoutingRuleGroup o) {
-		long r = (waitAfterSeconds - o.waitAfterSeconds);
-		if(r > 0) {
-			return 1;
-		} else if (r < 0) {
-			return -1;
-		}
-		return 0;
 	}
 }

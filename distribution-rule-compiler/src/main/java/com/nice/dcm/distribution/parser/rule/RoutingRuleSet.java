@@ -31,18 +31,5 @@ public class RoutingRuleSet implements Node {
 			routingRuleGroups = this.ruleGroups.stream().toList();
 		}
 		return routingRuleGroups;
-	}
-	
-	public boolean apply(Set<String> skillOidSet, long waitingTime) {
-		List<RoutingRuleGroup> groups = getRoutingRuleGroups();
-		for(RoutingRuleGroup group : groups) {
-			if(!group.isWaitEnough(waitingTime)) {
-				break;
-			}
-			if(group.containsAll(skillOidSet)) {
-				return true;
-			}
-		}
-		return false;
-	}
+	}	
 }

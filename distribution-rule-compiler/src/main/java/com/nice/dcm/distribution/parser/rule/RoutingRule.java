@@ -1,6 +1,5 @@
 package com.nice.dcm.distribution.parser.rule;
 
-import java.util.Collection;
 import java.util.Set;
 
 import com.nice.dcm.distribution.parser.rule.AgentStatusNode.AgentStatus;
@@ -18,8 +17,7 @@ public class RoutingRule implements Node, Comparable<RoutingRule> {
 
 	private final ActionRule action;
 	
-	//skill oids, OR condition
-	private final Set<Collection<String>> skills;
+	private final Set<ComparableOidSet> skills;
 	
 	private final int priority;
 	private final AgentStatus agentStatus;
@@ -32,9 +30,5 @@ public class RoutingRule implements Node, Comparable<RoutingRule> {
 	@Override
 	public int compareTo(RoutingRule o) {
 		return priority - o.priority;
-	}
-	
-	public boolean containsAll(Set<String> empSkills) {
-		return skills.containsAll(empSkills);
 	}
 }
