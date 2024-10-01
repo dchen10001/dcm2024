@@ -98,6 +98,36 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 */
 	void exitSkill(DistributionRulesParser.SkillContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#levelCondition}.
+	 * @param ctx the parse tree
+	 */
+	void enterLevelCondition(DistributionRulesParser.LevelConditionContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#levelCondition}.
+	 * @param ctx the parse tree
+	 */
+	void exitLevelCondition(DistributionRulesParser.LevelConditionContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#binaryOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterBinaryOperator(DistributionRulesParser.BinaryOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#binaryOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitBinaryOperator(DistributionRulesParser.BinaryOperatorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link DistributionRulesParser#sqlOperator}.
+	 * @param ctx the parse tree
+	 */
+	void enterSqlOperator(DistributionRulesParser.SqlOperatorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link DistributionRulesParser#sqlOperator}.
+	 * @param ctx the parse tree
+	 */
+	void exitSqlOperator(DistributionRulesParser.SqlOperatorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#entity_identifier}.
 	 * @param ctx the parse tree
 	 */

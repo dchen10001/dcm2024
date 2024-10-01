@@ -12,11 +12,9 @@ import lombok.ToString;
 @ToString
 public class RoutingRuleSet implements Node {
 	//order by waitAfterSeconds
-    private final  Set<RoutingRuleGroup> ruleGroups;
-    
-    private  List<RoutingRuleGroup> routingRuleGroups;
-    
-    public RoutingRuleSet(Set<RoutingRuleGroup> ruleGroups) {
+    private final  List<RoutingRuleGroup> ruleGroups;
+
+    public RoutingRuleSet(List<RoutingRuleGroup> ruleGroups) {
     	super();
     	this.ruleGroups = ruleGroups;
     }
@@ -25,11 +23,4 @@ public class RoutingRuleSet implements Node {
 	public NodeType getNodeType() {
 		return NodeType.ROUTINGRULESET;
 	}
-	
-	public List<RoutingRuleGroup> getRoutingRuleGroups() {
-		if(routingRuleGroups == null) {
-			routingRuleGroups = this.ruleGroups.stream().toList();
-		}
-		return routingRuleGroups;
-	}	
 }

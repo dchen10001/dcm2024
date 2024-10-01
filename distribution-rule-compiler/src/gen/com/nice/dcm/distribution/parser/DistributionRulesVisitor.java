@@ -65,6 +65,24 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSkill(DistributionRulesParser.SkillContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#levelCondition}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLevelCondition(DistributionRulesParser.LevelConditionContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#binaryOperator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBinaryOperator(DistributionRulesParser.BinaryOperatorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DistributionRulesParser#sqlOperator}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSqlOperator(DistributionRulesParser.SqlOperatorContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#entity_identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

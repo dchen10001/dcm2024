@@ -22,6 +22,16 @@ skillSet: '(' skill (',' skill)+ ')' ;
 
 skill: '@S:' entity_identifier;
 
+levelCondition:
+           binaryOperator NUMBER
+           | sqlOperator NUMBER '..' NUMBER
+       ;
+//          | 'in' NUMBER '..' NUMBER
+
+binaryOperator: ('<' | '<=' | '=' | '<>' | '>=' | '>');
+
+sqlOperator: 'in' | 'not in';
+
 entity_identifier: UUID_OR_HEXA | NUMBER;
 
 order: 'with priority' NUMBER;

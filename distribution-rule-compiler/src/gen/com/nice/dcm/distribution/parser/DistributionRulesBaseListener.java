@@ -125,6 +125,42 @@ public class DistributionRulesBaseListener implements DistributionRulesListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterLevelCondition(DistributionRulesParser.LevelConditionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLevelCondition(DistributionRulesParser.LevelConditionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBinaryOperator(DistributionRulesParser.BinaryOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBinaryOperator(DistributionRulesParser.BinaryOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSqlOperator(DistributionRulesParser.SqlOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSqlOperator(DistributionRulesParser.SqlOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEntity_identifier(DistributionRulesParser.Entity_identifierContext ctx) { }
 	/**
 	 * {@inheritDoc}

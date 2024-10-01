@@ -1,8 +1,9 @@
 package com.nice.dcm.distribution.parser;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -11,7 +12,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.nice.dcm.distribution.parser.DistributionRulesParser.Agent_statusContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.AndSkillsContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.BinaryOperatorContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.Entity_identifierContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.LevelConditionContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.OrderContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingRuleContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingRuleGroupContext;
@@ -21,6 +24,7 @@ import com.nice.dcm.distribution.parser.DistributionRulesParser.RuleActionContex
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillOrSetContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillSetContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
@@ -62,12 +66,17 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 
     @Override
     public RoutingRuleSet visitRoutingRuleSet(RoutingRuleSetContext ctx) {
-        Set<RoutingRuleGroup> ruleGroups = new TreeSet<>();
+        List<RoutingRuleGroup> ruleGroups = new ArrayList<>();
         // add first rule group
         ruleGroups.add(visitRoutingRuleGroup(ctx.routingRuleGroup()));
 
         for (RoutingWaitingRuleGroupContext r : ctx.routingWaitingRuleGroup()) {
             ruleGroups.add(visitRoutingWaitingRuleGroup(r));
+        }
+        
+        //TODO: sort by waitAfter, same waitAfter should merge
+        if(ruleGroups.size() > 1) {
+            ruleGroups.sort((r1, r2) -> Long.compare(r1.getWaitAfterSeconds(), r2.getWaitAfterSeconds()));
         }
         return new RoutingRuleSet(ruleGroups);
     }
@@ -82,7 +91,17 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
 
     @Override
     public RoutingRuleGroup visitRoutingRuleGroup(RoutingRuleGroupContext ctx) {
-        List<RoutingRule> rules = ctx.routingRule().stream().map(this::visitRoutingRule).toList();
+        List<RoutingRule> rules = ctx.routingRule().stream().map(this::visitRoutingRule).collect(Collectors.toList());
+        if (rules.size() > 1) {
+            rules.sort((r1, r2) -> Integer.compare(r1.getPriority(), r2.getPriority()));
+            //TODO: merge rules with same priority if the relationship is clear
+//            rules = rules
+//                    .stream().collect(Collectors.groupingBy(RoutingRule::getPriority)).values().stream().map(
+//                            list -> list.stream()
+//                                    .reduce((r1, r2) -> new RoutingRule(r1.getAction(), r1.getSkills(),
+//                                            r1.getPriority(), r1.getAgentStatus())))
+//                    .map(r -> r.get()).collect(Collectors.toList());
+        }
         return new RoutingRuleGroup(rules);
     }
 
@@ -178,5 +197,25 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
             String skillOid = getOid(ctx.skill());
             return new SkillSetRule(skillOid);
         }
+    }
+
+    @Override
+    public Node visitLevelCondition(LevelConditionContext ctx) {
+        BinaryOperatorContext binaryOperator = ctx.binaryOperator();
+        SqlOperatorContext sqlOperator = ctx.sqlOperator();
+        List<TerminalNode> numbers = ctx.NUMBER();
+        return null;
+    }
+
+    @Override
+    public Node visitBinaryOperator(BinaryOperatorContext ctx) {
+        ctx.getText();
+        return null;
+    }
+
+    @Override
+    public Node visitSqlOperator(SqlOperatorContext ctx) {
+        ctx.getText();
+        return null;
     }
 }
