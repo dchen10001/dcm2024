@@ -1,6 +1,7 @@
 package com.nice.dcm.distribution.parser.rule;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
@@ -11,20 +12,32 @@ import lombok.ToString;
 @Getter
 @ToString
 public class ComparableOidSet {
-    private final Set<String> oids;
+    private final Set<SkillLevelCondition> skillLevelConditions;
     
-    public ComparableOidSet(Collection<String> oids) {
-        this.oids = new TreeSet<>(oids);
+    public ComparableOidSet(Collection<SkillLevelCondition> skillLevelConditions) {
+        this.skillLevelConditions = new TreeSet<>(skillLevelConditions);
     }
     
-    public ComparableOidSet(String oid) {
-        this.oids = new TreeSet<>();
-        this.oids.add(oid);
+    public ComparableOidSet(SkillLevelCondition skillLevelCondition) {
+        this.skillLevelConditions = new TreeSet<>();
+        this.skillLevelConditions.add(skillLevelCondition);
+    }
+    
+    public ComparableOidSet(String skillOid) {
+        this.skillLevelConditions = new TreeSet<>();
+        this.skillLevelConditions.add(new SkillLevelCondition(skillOid));
+    }
+    
+    public ComparableOidSet(List<String> skillOids) {
+        this.skillLevelConditions = new TreeSet<>();
+        for (String skillOid : skillOids) {
+            this.skillLevelConditions.add(new SkillLevelCondition(skillOid));
+        }
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(oids);
+        return Objects.hash(skillLevelConditions);
     }
 
     @Override
@@ -36,6 +49,6 @@ public class ComparableOidSet {
         if (getClass() != obj.getClass())
             return false;
         ComparableOidSet other = (ComparableOidSet) obj;
-        return this.oids.equals(other.oids);
+        return this.skillLevelConditions.equals(other.skillLevelConditions);
     }
 }

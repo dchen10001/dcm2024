@@ -2,7 +2,6 @@ package com.nice.dcm.distribution.parser;
 
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.Assertions;
@@ -10,17 +9,26 @@ import org.junit.jupiter.api.Test;
 
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
-import com.nice.dcm.distribution.parser.rule.AgentStatusNode.AgentStatus;
+import com.nice.dcm.distribution.parser.rule.AgentStatusRule.AgentStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
+import com.nice.dcm.distribution.parser.rule.BinaryCondition;
+import com.nice.dcm.distribution.parser.rule.BinaryOperator;
+import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
 import com.nice.dcm.distribution.parser.rule.ComparableOidSet;
+import com.nice.dcm.distribution.parser.rule.Condition;
+import com.nice.dcm.distribution.parser.rule.ConditionRule;
 import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
+import com.nice.dcm.distribution.parser.rule.SkillLevelCondition;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
 import com.nice.dcm.distribution.parser.rule.SkillSetRule;
+import com.nice.dcm.distribution.parser.rule.SqlCondition;
+import com.nice.dcm.distribution.parser.rule.SqlOperator;
+import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
 class SkillRuleVisitorTest {
@@ -224,9 +232,10 @@ class SkillRuleVisitorTest {
 	void routingRuleGroupTest() {
 
 		String script = "queue to @S: a1 with priority 1";
-		Node rule = util.visitRoutingRuleGroup(script, visitor);
-		Assertions.assertTrue(rule instanceof RoutingRuleGroup);
+		RoutingRuleGroup rule = util.visitRoutingRuleGroup(script, visitor);
+		
 		RoutingRuleGroup routingRuleGroup = ((RoutingRuleGroup)rule);
+		
 		List<RoutingRule> rules = routingRuleGroup.getRules();
 		Assertions.assertEquals(1, rules.size());
 		RoutingRule routingRule = rules.iterator().next();
@@ -305,7 +314,7 @@ class SkillRuleVisitorTest {
 			util.visitRoutingRule(script, visitor);
 			Assertions.fail("Invalid queue to");
 		} catch(ParseCancellationException e) {
-			Assertions.assertEquals("line 1:15 mismatched input '<EOF>' expecting {'and', 'with priority'}", 
+			Assertions.assertEquals("line 1:15 mismatched input '<EOF>' expecting {'and', 'level', 'with priority'}", 
 					e.getMessage());
 		}
 		
@@ -408,15 +417,24 @@ class SkillRuleVisitorTest {
 	@Test
 	void skillTest() {
 		String script = "@S: 1 and";
-		Node rule = util.visitSkill(script, visitor);
-		Assertions.assertTrue(rule instanceof SkillRule);
-		Assertions.assertEquals("1", ((SkillRule)rule).getSkillOid());
+		SkillRule rule = util.visitSkill(script, visitor);
+		Assertions.assertEquals("1", rule.getSkillLevelCondition().getSkillOid());
+		Assertions.assertNull(rule.getSkillLevelCondition().getCondition());
 		
 		script = "@S: 11abcdef1111";
 		rule = util.visitSkill(script, visitor);
-		Assertions.assertTrue(rule instanceof SkillRule);
-		Assertions.assertEquals("11abcdef1111", ((SkillRule)rule).getSkillOid());
-		
+		Assertions.assertEquals("11abcdef1111", rule.getSkillLevelCondition().getSkillOid());
+        Assertions.assertNull(rule.getSkillLevelCondition().getCondition());
+        
+        script = "@S: 11abcdef1111 level > 10";
+        rule = util.visitSkill(script, visitor);
+        SkillLevelCondition skillLevelCondition = rule.getSkillLevelCondition();
+        Assertions.assertEquals("11abcdef1111", skillLevelCondition.getSkillOid());
+        Condition condition = skillLevelCondition.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(11));
+        Assertions.assertFalse(condition.evaluate(10));
+        
 		try {
 			script = "@S: skilloid";
 			util.visitSkill(script, visitor);
@@ -525,5 +543,131 @@ class SkillRuleVisitorTest {
 	        Assertions.assertEquals("line 1:17 mismatched input 'and' expecting ','", 
 	                e.getMessage());
 	    } 
+	}
+	
+	@Test
+	void visitSqlOperator() {
+	    String  script = "in";
+        SqlOperatorRule rule = util.visitSqlOperator(script, visitor);
+        Assertions.assertEquals(SqlOperator.IN, rule.getOperator());
+        
+        script = "not in";
+        rule = util.visitSqlOperator(script, visitor);
+        Assertions.assertEquals(SqlOperator.NOT_IN, rule.getOperator());
+        
+        try {
+            script = "like";
+            util.visitSqlOperator(script, visitor);
+        } catch(ParseCancellationException e) {
+            Assertions.assertEquals("line 1:0 token recognition error at: 'li'", 
+                    e.getMessage());
+        } 
+	}
+	
+	@Test
+    void visitBinaryOperator() {
+        String  script = "=";
+        BinaryOperatorRule rule = util.visitBinaryOperator(script, visitor);
+        BinaryOperator a = rule.getOperator();
+        Assertions.assertEquals(BinaryOperator.EQUAL, rule.getOperator());
+        
+        script = "<";
+        rule = util.visitBinaryOperator(script, visitor);
+        Assertions.assertEquals(BinaryOperator.LESS_THAN, rule.getOperator());
+        
+        script = "<=";
+        rule = util.visitBinaryOperator(script, visitor);
+        Assertions.assertEquals(BinaryOperator.LESS_THAN_OR_EQUAL, rule.getOperator());
+        
+        script = ">";
+        rule = util.visitBinaryOperator(script, visitor);
+        Assertions.assertEquals(BinaryOperator.GREATER_THAN, rule.getOperator());
+        
+        script = ">=";
+        rule = util.visitBinaryOperator(script, visitor);
+        Assertions.assertEquals(BinaryOperator.GREATER_THAN_OR_EQUAL, rule.getOperator());
+        
+        script = "<>";
+        rule = util.visitBinaryOperator(script, visitor);
+        Assertions.assertEquals(BinaryOperator.NOT_EQUAL, rule.getOperator());
+        
+        try {
+            script = "like";
+            util.visitBinaryOperator(script, visitor);
+        } catch(ParseCancellationException e) {
+            Assertions.assertEquals("line 1:0 token recognition error at: 'li'", 
+                    e.getMessage());
+        } 
+    }
+	
+	@Test
+	void visitBinaryLevelCondition() {
+	    String  script = " < 10";
+	    ConditionRule rule = util.visitLevelCondition(script, visitor);
+	    Condition condition = rule.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(9));
+        Assertions.assertFalse(condition.evaluate(10));
+        
+        script = " <= 10";
+        rule = util.visitLevelCondition(script, visitor);
+        condition = rule.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(10));
+        Assertions.assertFalse(condition.evaluate(11));
+        
+        script = " > 10";
+        rule = util.visitLevelCondition(script, visitor);
+        condition = rule.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(11));
+        Assertions.assertFalse(condition.evaluate(10));
+        
+        script = " >= 10";
+        rule = util.visitLevelCondition(script, visitor);
+        condition = rule.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(10));
+        Assertions.assertFalse(condition.evaluate(9));
+        
+        script = " = 10";
+        rule = util.visitLevelCondition(script, visitor);
+        condition = rule.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(10));
+        Assertions.assertFalse(condition.evaluate(9));
+        Assertions.assertFalse(condition.evaluate(11));
+        
+        script = " <> 10";
+        rule = util.visitLevelCondition(script, visitor);
+        condition = rule.getCondition();
+        Assertions.assertEquals(BinaryCondition.class, condition.getClass());
+        Assertions.assertFalse(condition.evaluate(10));
+        Assertions.assertTrue(condition.evaluate(9));
+        Assertions.assertTrue(condition.evaluate(11));
+    }
+	
+	@Test
+    void visitSQLLevelCondition() {
+        String  script = " in 10..20";
+        ConditionRule rule = util.visitLevelCondition(script, visitor);
+        Condition condition = rule.getCondition();
+        Assertions.assertEquals(SqlCondition.class, condition.getClass());
+        
+        Assertions.assertFalse(condition.evaluate(9));
+        Assertions.assertTrue(condition.evaluate(10));
+        Assertions.assertTrue(condition.evaluate(11));
+        Assertions.assertTrue(condition.evaluate(20));
+        Assertions.assertFalse(condition.evaluate(21));
+        
+        script =  " not in 10..20";
+        rule = util.visitLevelCondition(script, visitor);
+        condition = rule.getCondition();
+        Assertions.assertEquals(SqlCondition.class, condition.getClass());
+        Assertions.assertTrue(condition.evaluate(9));
+        Assertions.assertFalse(condition.evaluate(10));
+        Assertions.assertFalse(condition.evaluate(11));
+        Assertions.assertFalse(condition.evaluate(20));
+        Assertions.assertTrue(condition.evaluate(21)); 
 	}
 }

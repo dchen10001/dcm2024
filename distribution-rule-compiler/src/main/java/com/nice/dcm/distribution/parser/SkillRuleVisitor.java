@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
@@ -28,18 +30,25 @@ import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorConte
 import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
-import com.nice.dcm.distribution.parser.rule.AgentStatusNode;
-import com.nice.dcm.distribution.parser.rule.AgentStatusNode.AgentStatus;
+import com.nice.dcm.distribution.parser.rule.AgentStatusRule;
+import com.nice.dcm.distribution.parser.rule.AgentStatusRule.AgentStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
+import com.nice.dcm.distribution.parser.rule.BinaryCondition;
+import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
 import com.nice.dcm.distribution.parser.rule.ComparableOidSet;
+import com.nice.dcm.distribution.parser.rule.Condition;
+import com.nice.dcm.distribution.parser.rule.ConditionRule;
 import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
+import com.nice.dcm.distribution.parser.rule.SkillLevelCondition;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
 import com.nice.dcm.distribution.parser.rule.SkillSetRule;
+import com.nice.dcm.distribution.parser.rule.SqlCondition;
+import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
 public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
@@ -113,16 +122,16 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
         Set<ComparableOidSet> skills = skill.getSkills();
         AgentStatus agentStatus = null;
         if (ctx.agent_status() != null) {
-            AgentStatusNode agentStatusNode = visitAgent_status(ctx.agent_status());
+            AgentStatusRule agentStatusNode = visitAgent_status(ctx.agent_status());
             agentStatus = agentStatusNode.getAgentStatus();
         }
         return new RoutingRule(action, skills, order.getPriority(), agentStatus);
     }
 
     @Override
-    public AgentStatusNode visitAgent_status(Agent_statusContext ctx) {
+    public AgentStatusRule visitAgent_status(Agent_statusContext ctx) {
         if (ctx.LEAST_BUSY() != null) {
-            return new AgentStatusNode(AgentStatus.LEAST_BUSY);
+            return new AgentStatusRule(AgentStatus.LEAST_BUSY);
         }
         return null;
     }
@@ -138,7 +147,13 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
     @Override
     public SkillRule visitSkill(SkillContext ctx) {
         OidRule oidRule = visitEntity_identifier(ctx.entity_identifier());
-        return new SkillRule(oidRule.getOid());
+        
+        LevelConditionContext levelCtx = ctx.levelCondition();
+        if (levelCtx == null) {
+            return new SkillRule(oidRule.getOid());
+        }
+        ConditionRule conditionRule = visitLevelCondition(levelCtx);
+        return new SkillRule(oidRule.getOid(), conditionRule.getCondition());
     }
 
     @Override
@@ -179,13 +194,13 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
     @Override
     public SkillSetRule visitSkillSet(SkillSetContext ctx) {
         List<SkillContext> skills = ctx.skill();
-        List<String> skillOids = skills.stream().map(this::getOid).toList();
-        return new SkillSetRule(skillOids);
+        List<SkillLevelCondition> skillLevelConditions = skills.stream().map(this::getSkillLevelCondition).toList();
+        return new SkillSetRule(skillLevelConditions);
     }
 
-    private String getOid(SkillContext ctx) {
+    private SkillLevelCondition getSkillLevelCondition(SkillContext ctx) {
         SkillRule node = visitSkill(ctx);
-        return node.getSkillOid();
+        return node.getSkillLevelCondition();
     }
 
     @Override
@@ -194,28 +209,54 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
         if (skillSet != null) {
             return visitSkillSet(skillSet);
         } else {
-            String skillOid = getOid(ctx.skill());
-            return new SkillSetRule(skillOid);
+            SkillLevelCondition skillLevelCondition = getSkillLevelCondition(ctx.skill());
+            return new SkillSetRule(skillLevelCondition);
         }
     }
 
     @Override
-    public Node visitLevelCondition(LevelConditionContext ctx) {
+    public ConditionRule visitLevelCondition(LevelConditionContext ctx) {
         BinaryOperatorContext binaryOperator = ctx.binaryOperator();
         SqlOperatorContext sqlOperator = ctx.sqlOperator();
         List<TerminalNode> numbers = ctx.NUMBER();
-        return null;
+
+        Condition condition = null;
+        if (binaryOperator != null) {
+            BinaryOperatorRule binaryOperatorRule = visitBinaryOperator(binaryOperator);
+            int level = this.toNumber(numbers.get(0));
+            condition = new BinaryCondition(binaryOperatorRule.getOperator(), level);
+            
+        } else if (sqlOperator != null) {
+            SqlOperatorRule sqlOperatorRule = visitSqlOperator(sqlOperator);
+            int lowerLevel = this.toNumber(numbers.get(0));
+            int upperLevel = this.toNumber(numbers.get(1));
+            condition = new SqlCondition(sqlOperatorRule.getOperator(), lowerLevel, upperLevel);
+        }
+        return new ConditionRule(condition);
     }
 
     @Override
-    public Node visitBinaryOperator(BinaryOperatorContext ctx) {
-        ctx.getText();
-        return null;
+    public BinaryOperatorRule visitBinaryOperator(BinaryOperatorContext ctx) {
+        String operator = ctx.getText();
+        try {
+            return new BinaryOperatorRule(operator);
+        } catch (IllegalArgumentException e) {
+            Token token = ctx.getStart();
+            throw new ParseCancellationException("lvisitRoutingRuleSetine " + token.getLine() + ":" + token.getCharPositionInLine()
+                    + ". Invalid operator: " + operator);
+        }        
     }
 
     @Override
-    public Node visitSqlOperator(SqlOperatorContext ctx) {
-        ctx.getText();
-        return null;
+    public SqlOperatorRule visitSqlOperator(SqlOperatorContext ctx) {
+        String operator = ctx.getText();
+        try {
+            return new SqlOperatorRule(operator);
+        } catch (IllegalArgumentException e) {
+            Token token = ctx.getStart();
+            throw new ParseCancellationException("line " + 
+                    token.getLine() + ":" + token.getCharPositionInLine() 
+                    + ". Invalid operator: " + operator);
+        }
     }
 }

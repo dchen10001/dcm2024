@@ -12,12 +12,12 @@ import lombok.ToString;
 public class SkillSetRule implements Node {
     private final ComparableOidSet skillSetKey;
     
-    public SkillSetRule(Collection<String> skillOids) {
-        this.skillSetKey = new ComparableOidSet(skillOids);
+    public SkillSetRule(Collection<SkillLevelCondition> skillLevelConditions) {
+        this.skillSetKey = new ComparableOidSet(skillLevelConditions);
     }
     
-    public SkillSetRule(String skillOid) {
-        this.skillSetKey = new ComparableOidSet(skillOid);
+    public SkillSetRule(SkillLevelCondition skillLevelCondition) {
+        this.skillSetKey = new ComparableOidSet(skillLevelCondition);
     }
     
     @Override   

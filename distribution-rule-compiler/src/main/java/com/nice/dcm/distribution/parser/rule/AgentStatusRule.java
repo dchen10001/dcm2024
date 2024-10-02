@@ -9,7 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=false)
 @ToString
 @AllArgsConstructor
-public class AgentStatusNode implements Node {
+public class AgentStatusRule implements Node {
 	public enum AgentStatus {
 		LEAST_BUSY;		
 	}

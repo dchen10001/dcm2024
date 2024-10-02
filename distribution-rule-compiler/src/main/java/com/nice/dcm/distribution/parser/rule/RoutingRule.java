@@ -2,7 +2,7 @@ package com.nice.dcm.distribution.parser.rule;
 
 import java.util.Set;
 
-import com.nice.dcm.distribution.parser.rule.AgentStatusNode.AgentStatus;
+import com.nice.dcm.distribution.parser.rule.AgentStatusRule.AgentStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

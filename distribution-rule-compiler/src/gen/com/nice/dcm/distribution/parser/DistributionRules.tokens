@@ -14,26 +14,28 @@ T__12=13
 T__13=14
 T__14=15
 T__15=16
-LEAST_BUSY=17
-QUEUE_TO=18
-NUMBER=19
-UUID_OR_HEXA=20
-WHITESPACE=21
+T__16=17
+LEAST_BUSY=18
+QUEUE_TO=19
+NUMBER=20
+UUID_OR_HEXA=21
+WHITESPACE=22
 'and'=1
 '('=2
 ','=3
 ')'=4
 '@S:'=5
-'..'=6
-'<'=7
-'<='=8
-'='=9
-'<>'=10
-'>='=11
-'>'=12
-'in'=13
-'not in'=14
-'with priority'=15
-'wait'=16
-'least busy of'=17
-'queue to'=18
+'level'=6
+'..'=7
+'<'=8
+'<='=9
+'='=10
+'<>'=11
+'>='=12
+'>'=13
+'in'=14
+'not in'=15
+'with priority'=16
+'wait'=17
+'least busy of'=18
+'queue to'=19

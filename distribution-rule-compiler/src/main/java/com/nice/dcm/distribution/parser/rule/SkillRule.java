@@ -8,10 +8,17 @@ import lombok.AllArgsConstructor;
 @Getter
 @EqualsAndHashCode(callSuper=false)
 @ToString
-@AllArgsConstructor
 public class SkillRule implements Node {
-	private final String skillOid;
+	private final SkillLevelCondition skillLevelCondition;
+
+	public SkillRule(String skillOid) {
+	    this(skillOid, null);
+	}
 	
+    public SkillRule(String skillOid, Condition condition) {
+        this.skillLevelCondition = new SkillLevelCondition(skillOid, condition);
+    }
+    
 	@Override
 	public NodeType getNodeType() {
 		return NodeType.SKILLRULE;

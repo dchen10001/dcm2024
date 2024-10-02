@@ -20,13 +20,12 @@ skillOrSet: skill | skillSet;
 
 skillSet: '(' skill (',' skill)+ ')' ;
 
-skill: '@S:' entity_identifier;
+skill: '@S:' entity_identifier ('level' levelCondition)?;
 
 levelCondition:
            binaryOperator NUMBER
            | sqlOperator NUMBER '..' NUMBER
        ;
-//          | 'in' NUMBER '..' NUMBER
 
 binaryOperator: ('<' | '<=' | '=' | '<>' | '>=' | '>');
 
