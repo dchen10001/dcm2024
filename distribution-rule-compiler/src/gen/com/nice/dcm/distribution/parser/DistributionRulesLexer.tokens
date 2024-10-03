@@ -7,14 +7,14 @@ T__5=6
 T__6=7
 T__7=8
 T__8=9
-T__9=10
-T__10=11
-T__11=12
-T__12=13
-T__13=14
-T__14=15
-T__15=16
-T__16=17
+LESS_THAN=10
+LESS_THAN_EQUAL=11
+EQUAL=12
+NOT_EQUAL=13
+GREATER_THAN=14
+GREATER_THAN_EQUAL=15
+IN=16
+NOT_IN=17
 LEAST_BUSY=18
 QUEUE_TO=19
 NUMBER=20
@@ -27,15 +27,14 @@ WHITESPACE=22
 '@S:'=5
 'level'=6
 '..'=7
-'<'=8
-'<='=9
-'='=10
-'<>'=11
-'>='=12
-'>'=13
-'in'=14
-'not in'=15
-'with priority'=16
-'wait'=17
+'with priority'=8
+'wait'=9
+'<'=10
+'<='=11
+'='=12
+'>'=14
+'>='=15
+'in'=16
+'not in'=17
 'least busy of'=18
 'queue to'=19

@@ -27,9 +27,23 @@ levelCondition:
            | sqlOperator NUMBER '..' NUMBER
        ;
 
-binaryOperator: ('<' | '<=' | '=' | '<>' | '>=' | '>');
+binaryOperator: (LESS_THAN 
+	| LESS_THAN_EQUAL 
+	| EQUAL | NOT_EQUAL 
+	| GREATER_THAN | GREATER_THAN_EQUAL);
 
-sqlOperator: 'in' | 'not in';
+LESS_THAN: '<';
+LESS_THAN_EQUAL: '<=';
+EQUAL: '=';
+NOT_EQUAL: '<>'|'!=';
+GREATER_THAN: '>';
+GREATER_THAN_EQUAL: '>=';
+
+
+sqlOperator: IN | NOT_IN;
+
+IN: 'in';
+NOT_IN: 'not in';
 
 entity_identifier: UUID_OR_HEXA | NUMBER;
 

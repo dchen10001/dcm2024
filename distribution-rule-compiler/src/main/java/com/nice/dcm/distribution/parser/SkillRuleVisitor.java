@@ -34,6 +34,7 @@ import com.nice.dcm.distribution.parser.rule.AgentStatusRule;
 import com.nice.dcm.distribution.parser.rule.AgentStatusRule.AgentStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
 import com.nice.dcm.distribution.parser.rule.BinaryCondition;
+import com.nice.dcm.distribution.parser.rule.BinaryOperator;
 import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
 import com.nice.dcm.distribution.parser.rule.ComparableOidSet;
 import com.nice.dcm.distribution.parser.rule.Condition;
@@ -48,6 +49,7 @@ import com.nice.dcm.distribution.parser.rule.SkillLevelCondition;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
 import com.nice.dcm.distribution.parser.rule.SkillSetRule;
 import com.nice.dcm.distribution.parser.rule.SqlCondition;
+import com.nice.dcm.distribution.parser.rule.SqlOperator;
 import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
@@ -238,9 +240,19 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
     @Override
     public BinaryOperatorRule visitBinaryOperator(BinaryOperatorContext ctx) {
         String operator = ctx.getText();
-        try {
-            return new BinaryOperatorRule(operator);
-        } catch (IllegalArgumentException e) {
+        if(ctx.LESS_THAN() != null) {
+        	return new BinaryOperatorRule(BinaryOperator.LESS_THAN);
+        } else if(ctx.LESS_THAN_EQUAL() != null) {
+        	return new BinaryOperatorRule(BinaryOperator.LESS_THAN_OR_EQUAL);        	
+        } else if(ctx.EQUAL() != null) {
+        	return new BinaryOperatorRule(BinaryOperator.EQUAL);        	
+        } else if(ctx.NOT_EQUAL() != null) {
+        	return new BinaryOperatorRule(BinaryOperator.NOT_EQUAL);        	
+        } else if(ctx.GREATER_THAN() != null) {
+        	return new BinaryOperatorRule(BinaryOperator.GREATER_THAN);        	
+        } else if(ctx.GREATER_THAN_EQUAL() != null) {
+        	return new BinaryOperatorRule(BinaryOperator.GREATER_THAN_OR_EQUAL);        	
+        } else {
             Token token = ctx.getStart();
             throw new ParseCancellationException("lvisitRoutingRuleSetine " + token.getLine() + ":" + token.getCharPositionInLine()
                     + ". Invalid operator: " + operator);
@@ -250,9 +262,11 @@ public class SkillRuleVisitor implements DistributionRulesVisitor<Node> {
     @Override
     public SqlOperatorRule visitSqlOperator(SqlOperatorContext ctx) {
         String operator = ctx.getText();
-        try {
-            return new SqlOperatorRule(operator);
-        } catch (IllegalArgumentException e) {
+        if(ctx.IN() != null) {
+        	return new SqlOperatorRule(SqlOperator.IN);
+        } else if(ctx.NOT_IN() != null) {
+        	return new SqlOperatorRule(SqlOperator.NOT_IN);        	
+        } else {        
             Token token = ctx.getStart();
             throw new ParseCancellationException("line " + 
                     token.getLine() + ":" + token.getCharPositionInLine() 
