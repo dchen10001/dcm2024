@@ -6,7 +6,7 @@ routingWaitingRuleGroup: waitRule routingRuleGroup;
 
 routingRuleGroup: (routingRule)+;
 
-routingRule: ruleAction (agent_status)? andSkills order;
+routingRule: ruleAction (queue_status)? andSkills order;
 
 /* if we have new action, such as ROUTE_TO, 
 * we can add it here as 
@@ -53,9 +53,9 @@ waitRule: 'wait' NUMBER;
 
 /* if we have new agent status, such as HIGHER_RANKING, 
 * we can add it here as 
-* agent_status: LEAST_BUSY | HIGHER_RANKING;
+* queue_status: LEAST_BUSY | HIGHER_RANKING;
 */
-agent_status: LEAST_BUSY;
+queue_status: LEAST_BUSY;
 
 // Agent status
 LEAST_BUSY: 'least busy of';

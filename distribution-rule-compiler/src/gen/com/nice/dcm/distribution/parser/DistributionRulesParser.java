@@ -26,13 +26,13 @@ public class DistributionRulesParser extends Parser {
 		RULE_routingRule = 3, RULE_ruleAction = 4, RULE_andSkills = 5, RULE_skillOrSet = 6, 
 		RULE_skillSet = 7, RULE_skill = 8, RULE_levelCondition = 9, RULE_binaryOperator = 10, 
 		RULE_sqlOperator = 11, RULE_entity_identifier = 12, RULE_order = 13, RULE_waitRule = 14, 
-		RULE_agent_status = 15;
+		RULE_queue_status = 15;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"routingRuleSet", "routingWaitingRuleGroup", "routingRuleGroup", "routingRule", 
 			"ruleAction", "andSkills", "skillOrSet", "skillSet", "skill", "levelCondition", 
 			"binaryOperator", "sqlOperator", "entity_identifier", "order", "waitRule", 
-			"agent_status"
+			"queue_status"
 		};
 	}
 	public static final String[] ruleNames = makeRuleNames();
@@ -294,8 +294,8 @@ public class DistributionRulesParser extends Parser {
 		public OrderContext order() {
 			return getRuleContext(OrderContext.class,0);
 		}
-		public Agent_statusContext agent_status() {
-			return getRuleContext(Agent_statusContext.class,0);
+		public Queue_statusContext queue_status() {
+			return getRuleContext(Queue_statusContext.class,0);
 		}
 		public RoutingRuleContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -331,7 +331,7 @@ public class DistributionRulesParser extends Parser {
 			if (_la==LEAST_BUSY) {
 				{
 				setState(50);
-				agent_status();
+				queue_status();
 				}
 			}
 
@@ -990,30 +990,30 @@ public class DistributionRulesParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class Agent_statusContext extends ParserRuleContext {
+	public static class Queue_statusContext extends ParserRuleContext {
 		public TerminalNode LEAST_BUSY() { return getToken(DistributionRulesParser.LEAST_BUSY, 0); }
-		public Agent_statusContext(ParserRuleContext parent, int invokingState) {
+		public Queue_statusContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_agent_status; }
+		@Override public int getRuleIndex() { return RULE_queue_status; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).enterAgent_status(this);
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).enterQueue_status(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).exitAgent_status(this);
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).exitQueue_status(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DistributionRulesVisitor ) return ((DistributionRulesVisitor<? extends T>)visitor).visitAgent_status(this);
+			if ( visitor instanceof DistributionRulesVisitor ) return ((DistributionRulesVisitor<? extends T>)visitor).visitQueue_status(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final Agent_statusContext agent_status() throws RecognitionException {
-		Agent_statusContext _localctx = new Agent_statusContext(_ctx, getState());
-		enterRule(_localctx, 30, RULE_agent_status);
+	public final Queue_statusContext queue_status() throws RecognitionException {
+		Queue_statusContext _localctx = new Queue_statusContext(_ctx, getState());
+		enterRule(_localctx, 30, RULE_queue_status);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{

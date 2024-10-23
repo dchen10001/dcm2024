@@ -34,78 +34,78 @@ public class ParserUtil {
     }
 
     
-    public WaitRule visitWait(String script, SkillRuleVisitor vistor) {
+    public WaitRule visitWait(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	WaitRuleContext waitRule = parser.waitRule();
     	return (WaitRule)waitRule.accept(vistor);    
     }
     
-    public OidRule visitOid(String script, SkillRuleVisitor vistor) {
+    public OidRule visitOid(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (OidRule)parser.entity_identifier().accept(vistor);    
     }
     
-    public OrderRule visitOrder(String script, SkillRuleVisitor vistor) {
+    public OrderRule visitOrder(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (OrderRule)parser.order().accept(vistor);    
     }
     
-    public SkillRule visitSkill(String script, SkillRuleVisitor vistor) {
+    public SkillRule visitSkill(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (SkillRule)parser.skill().accept(vistor);    
     }
     
-    public AndSkillsRule visitAndSkills(String script, SkillRuleVisitor vistor) {
+    public AndSkillsRule visitAndSkills(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (AndSkillsRule)parser.andSkills().accept(vistor);    
     }
     
-    public SkillSetRule visitSkillSet(String script, SkillRuleVisitor vistor) {
+    public SkillSetRule visitSkillSet(String script, SkillRuleVisitorImpl vistor) {
         DistributionRulesParser parser = parserScript(script);
         return (SkillSetRule)parser.skillSet().accept(vistor);    
     }
     
-    public SkillSetRule visitSkillOrSet(String script, SkillRuleVisitor vistor) {
+    public SkillSetRule visitSkillOrSet(String script, SkillRuleVisitorImpl vistor) {
         DistributionRulesParser parser = parserScript(script);
         return (SkillSetRule)parser.skillOrSet().accept(vistor);    
     }
     
-    public ActionRule visitRuleAction(String script, SkillRuleVisitor vistor) {
+    public ActionRule visitRuleAction(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (ActionRule)parser.ruleAction().accept(vistor);    
     }
     
-    public RoutingRule visitRoutingRule(String script, SkillRuleVisitor vistor) {
+    public RoutingRule visitRoutingRule(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (RoutingRule)parser.routingRule().accept(vistor);    
     }
     
-    public RoutingRuleGroup visitRoutingRuleGroup(String script, SkillRuleVisitor vistor) {
+    public RoutingRuleGroup visitRoutingRuleGroup(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (RoutingRuleGroup)parser.routingRuleGroup().accept(vistor);    
     }
     
-    public RoutingRuleGroup visitRoutingWaitRuleGroup(String script, SkillRuleVisitor vistor) {
+    public RoutingRuleGroup visitRoutingWaitRuleGroup(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (RoutingRuleGroup)parser.routingWaitingRuleGroup().accept(vistor);    
     }
     
-    public RoutingRuleSet visitRoutingRuleSet(String script, SkillRuleVisitor vistor) {
+    public RoutingRuleSet visitRoutingRuleSet(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	return (RoutingRuleSet)parser.routingRuleSet().accept(vistor);    
     }
     
-    public SqlOperatorRule visitSqlOperator(String script, SkillRuleVisitor vistor) {
+    public SqlOperatorRule visitSqlOperator(String script, SkillRuleVisitorImpl vistor) {
         DistributionRulesParser parser = parserScript(script);
         return (SqlOperatorRule)parser.sqlOperator().accept(vistor);  
     }
     
-    public BinaryOperatorRule visitBinaryOperator(String script, SkillRuleVisitor vistor) {
+    public BinaryOperatorRule visitBinaryOperator(String script, SkillRuleVisitorImpl vistor) {
         DistributionRulesParser parser = parserScript(script);
         return (BinaryOperatorRule)parser.binaryOperator().accept(vistor);  
     }
     
-    public ConditionRule visitLevelCondition(String script, SkillRuleVisitor vistor) {
+    public ConditionRule visitLevelCondition(String script, SkillRuleVisitorImpl vistor) {
         DistributionRulesParser parser = parserScript(script);
         return (ConditionRule)parser.levelCondition().accept(vistor);
     }

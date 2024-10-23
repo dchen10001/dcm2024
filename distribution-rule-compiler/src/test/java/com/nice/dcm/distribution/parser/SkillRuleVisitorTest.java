@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
-import com.nice.dcm.distribution.parser.rule.AgentStatusRule.AgentStatus;
+import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
 import com.nice.dcm.distribution.parser.rule.BinaryCondition;
 import com.nice.dcm.distribution.parser.rule.BinaryOperator;
@@ -33,7 +33,7 @@ import com.nice.dcm.distribution.parser.rule.WaitRule;
 
 class SkillRuleVisitorTest {
 	ParserUtil util = new ParserUtil();
-	SkillRuleVisitor visitor = new SkillRuleVisitor();
+	SkillRuleVisitorImpl visitor = new SkillRuleVisitorImpl();
 	
 	@Test
 	void routingRuleSetTest() {
@@ -280,7 +280,7 @@ class SkillRuleVisitorTest {
 		Node rule = util.visitRoutingRule(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRule);
 		RoutingRule routingRule = ((RoutingRule)rule);
-		Assertions.assertEquals(AgentStatus.LEAST_BUSY, routingRule.getAgentStatus());
+		Assertions.assertEquals(QueueStatus.LEAST_BUSY, routingRule.getQueueStatus());
 		Assertions.assertEquals(ActionType.QUEUE_TO, routingRule.getAction().getAction());
 		Assertions.assertEquals(1, routingRule.getPriority());
 		Assertions.assertEquals(Set.of(new ComparableOidSet("a1")), routingRule.getSkills());
@@ -289,7 +289,7 @@ class SkillRuleVisitorTest {
 		rule = util.visitRoutingRule(script, visitor);
 		Assertions.assertTrue(rule instanceof RoutingRule);
 		routingRule = ((RoutingRule)rule);
-		Assertions.assertNull(routingRule.getAgentStatus());
+		Assertions.assertNull(routingRule.getQueueStatus());
 		Assertions.assertEquals(1, routingRule.getPriority());
 		Assertions.assertEquals(Set.of(new ComparableOidSet("a1")), routingRule.getSkills());
 		

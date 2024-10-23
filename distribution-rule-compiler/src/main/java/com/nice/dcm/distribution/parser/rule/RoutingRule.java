@@ -2,7 +2,7 @@ package com.nice.dcm.distribution.parser.rule;
 
 import java.util.Set;
 
-import com.nice.dcm.distribution.parser.rule.AgentStatusRule.AgentStatus;
+import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,7 +20,7 @@ public class RoutingRule implements Node, Comparable<RoutingRule> {
 	private final Set<ComparableOidSet> skills;
 	
 	private final int priority;
-	private final AgentStatus agentStatus;
+	private final QueueStatus queueStatus;
 	
 	@Override
 	public NodeType getNodeType() {

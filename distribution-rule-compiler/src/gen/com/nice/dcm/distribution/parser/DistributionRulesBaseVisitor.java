@@ -123,5 +123,5 @@ public class DistributionRulesBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitAgent_status(DistributionRulesParser.Agent_statusContext ctx) { return visitChildren(ctx); }
+	@Override public T visitQueue_status(DistributionRulesParser.Queue_statusContext ctx) { return visitChildren(ctx); }
 }

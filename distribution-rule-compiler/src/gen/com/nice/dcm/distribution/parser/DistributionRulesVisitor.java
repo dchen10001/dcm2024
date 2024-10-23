@@ -101,9 +101,9 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWaitRule(DistributionRulesParser.WaitRuleContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DistributionRulesParser#agent_status}.
+	 * Visit a parse tree produced by {@link DistributionRulesParser#queue_status}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAgent_status(DistributionRulesParser.Agent_statusContext ctx);
+	T visitQueue_status(DistributionRulesParser.Queue_statusContext ctx);
 }
