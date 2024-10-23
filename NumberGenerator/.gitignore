@@ -1,3 +1,4 @@
+.scannerwork/
 .settings/
 target/
 .project
@@ -18,3 +19,4 @@ target/
 *.sol
 *.dual
 *.txt
+.DS_Store

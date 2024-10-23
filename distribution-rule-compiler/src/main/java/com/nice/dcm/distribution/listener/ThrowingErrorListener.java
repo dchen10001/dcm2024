@@ -6,8 +6,6 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ThrowingErrorListener extends BaseErrorListener {
 	private static final Logger logger = LoggerFactory.getLogger(ThrowingErrorListener.class);

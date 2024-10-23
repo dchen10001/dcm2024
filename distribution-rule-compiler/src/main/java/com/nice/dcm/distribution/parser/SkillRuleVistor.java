@@ -1,21 +1,14 @@
 package com.nice.dcm.distribution.parser;
 
-import java.util.List;
-
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.nice.dcm.distribution.parser.DistributionRulesParser.BinaryOperatorContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorContext;
-import com.nice.dcm.distribution.parser.rule.BinaryCondition;
 import com.nice.dcm.distribution.parser.rule.BinaryOperator;
-import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
-import com.nice.dcm.distribution.parser.rule.Condition;
 import com.nice.dcm.distribution.parser.rule.Node;
-import com.nice.dcm.distribution.parser.rule.SqlCondition;
 import com.nice.dcm.distribution.parser.rule.SqlOperator;
-import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 
 public interface SkillRuleVistor extends DistributionRulesVisitor<Node> {
     /**

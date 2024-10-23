@@ -1,0 +1,5 @@
+autoEnabled=true
+bindingSuggestionsDisabled=true
+eclipse.preferences.version=1
+projectKey=saas-dcm-lib-solver
+serverId=sonar.nice.com
