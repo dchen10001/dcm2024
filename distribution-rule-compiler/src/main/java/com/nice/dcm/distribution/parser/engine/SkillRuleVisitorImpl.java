@@ -1,30 +1,66 @@
-package com.nice.dcm.distribution.parser;
+package com.nice.dcm.distribution.parser.engine;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
+import com.nice.dcm.distribution.parser.AbstractSkillRuleVisitorImpl;
+import com.nice.dcm.distribution.parser.DistributionRulesParser;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.AndSkillsContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.BinaryOperatorContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.Entity_identifierContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.LevelConditionContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.OrderContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.Queue_statusContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingRuleContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingRuleGroupContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingRuleSetContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RoutingWaitingRuleGroupContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.RuleActionContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillOrSetContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.SkillSetContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
+import com.nice.dcm.distribution.parser.node.BinaryCondition;
+import com.nice.dcm.distribution.parser.node.BinaryOperator;
+import com.nice.dcm.distribution.parser.node.Condition;
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.SqlCondition;
+import com.nice.dcm.distribution.parser.node.SqlOperator;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
-import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
-import com.nice.dcm.distribution.parser.rule.ComparableOidSet;
-import com.nice.dcm.distribution.parser.rule.OrderRule;
+import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
 import com.nice.dcm.distribution.parser.rule.QueueStatusRule;
+import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
+import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
+import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
+import com.nice.dcm.distribution.parser.rule.ComparableOidSet;
+import com.nice.dcm.distribution.parser.rule.ConditionRule;
+import com.nice.dcm.distribution.parser.rule.OidRule;
+import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleGroup;
 import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
+import com.nice.dcm.distribution.parser.rule.SkillLevelCondition;
+import com.nice.dcm.distribution.parser.rule.SkillRule;
 import com.nice.dcm.distribution.parser.rule.SkillSetRule;
+import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
-import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
 
-public class SkillRuleVisitorService extends AbstractSkillRuleVisitorImpl {
+public class SkillRuleVisitorImpl extends AbstractSkillRuleVisitorImpl {
 
+    public SkillRuleVisitorImpl() {
+        super();
+    }
+    
     /**
      * Get a routing rule set, which is the top level rule set
      * 
@@ -121,5 +157,5 @@ public class SkillRuleVisitorService extends AbstractSkillRuleVisitorImpl {
     protected ComparableOidSet getOidSet(SkillOrSetContext ctx) {
         SkillSetRule node = visitSkillOrSet(ctx);
         return node.getSkillSetKey();
-    }
+    }    
 }

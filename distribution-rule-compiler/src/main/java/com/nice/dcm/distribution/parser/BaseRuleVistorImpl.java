@@ -17,46 +17,26 @@ import com.nice.dcm.distribution.parser.DistributionRulesParser.Queue_statusCont
 import com.nice.dcm.distribution.parser.DistributionRulesParser.RuleActionContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
+import com.nice.dcm.distribution.parser.node.BinaryCondition;
+import com.nice.dcm.distribution.parser.node.BinaryOperator;
+import com.nice.dcm.distribution.parser.node.Condition;
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.SqlCondition;
+import com.nice.dcm.distribution.parser.node.SqlOperator;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
-import com.nice.dcm.distribution.parser.rule.BinaryCondition;
-import com.nice.dcm.distribution.parser.rule.BinaryOperator;
 import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
-import com.nice.dcm.distribution.parser.rule.Condition;
 import com.nice.dcm.distribution.parser.rule.ConditionRule;
-import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.QueueStatusRule;
 import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
-import com.nice.dcm.distribution.parser.rule.SqlCondition;
-import com.nice.dcm.distribution.parser.rule.SqlOperator;
 import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 
-public abstract class BaseRuleVistorImpl implements SkillRuleVistor {
+public abstract class BaseRuleVistorImpl extends BaseVistorImpl {
     protected BaseRuleVistorImpl() {
-
-    }
-
-    @Override
-    public Node visit(ParseTree tree) {
-        return null;
-    }
-
-    @Override
-    public Node visitChildren(RuleNode node) {
-        return null;
-    }
-
-    @Override
-    public Node visitTerminal(TerminalNode node) {
-        return null;
-    }
-
-    @Override
-    public Node visitErrorNode(ErrorNode node) {
-        return null;
+    	super();
     }
 
     public ConditionRule visitLevelCondition(LevelConditionContext ctx) {

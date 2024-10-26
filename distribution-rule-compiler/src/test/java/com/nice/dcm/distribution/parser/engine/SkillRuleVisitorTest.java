@@ -1,4 +1,4 @@
-package com.nice.dcm.distribution.parser;
+package com.nice.dcm.distribution.parser.engine;
 
 import java.util.List;
 import java.util.Set;
@@ -7,17 +7,21 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import com.nice.dcm.distribution.parser.ParserUtil;
+import com.nice.dcm.distribution.parser.engine.SkillRuleVisitorImpl;
+import com.nice.dcm.distribution.parser.node.BinaryCondition;
+import com.nice.dcm.distribution.parser.node.BinaryOperator;
+import com.nice.dcm.distribution.parser.node.Condition;
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.SqlCondition;
+import com.nice.dcm.distribution.parser.node.SqlOperator;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.ActionRule.ActionType;
 import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
-import com.nice.dcm.distribution.parser.rule.BinaryCondition;
-import com.nice.dcm.distribution.parser.rule.BinaryOperator;
 import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
 import com.nice.dcm.distribution.parser.rule.ComparableOidSet;
-import com.nice.dcm.distribution.parser.rule.Condition;
 import com.nice.dcm.distribution.parser.rule.ConditionRule;
-import com.nice.dcm.distribution.parser.rule.Node;
 import com.nice.dcm.distribution.parser.rule.OidRule;
 import com.nice.dcm.distribution.parser.rule.OrderRule;
 import com.nice.dcm.distribution.parser.rule.RoutingRule;
@@ -26,8 +30,6 @@ import com.nice.dcm.distribution.parser.rule.RoutingRuleSet;
 import com.nice.dcm.distribution.parser.rule.SkillLevelCondition;
 import com.nice.dcm.distribution.parser.rule.SkillRule;
 import com.nice.dcm.distribution.parser.rule.SkillSetRule;
-import com.nice.dcm.distribution.parser.rule.SqlCondition;
-import com.nice.dcm.distribution.parser.rule.SqlOperator;
 import com.nice.dcm.distribution.parser.rule.SqlOperatorRule;
 import com.nice.dcm.distribution.parser.rule.WaitRule;
 

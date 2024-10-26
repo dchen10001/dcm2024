@@ -5,33 +5,33 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.nice.dcm.simlation.core.event.TimeEvent;
 
-public class TimeEventServiceImplTest {
+class TimeEventServiceImplTest {
 
 	@Test	
-	public void testOffer() {
+	void testOffer() {
 		MockListener listener = new MockListener();
 		TimeEventServiceImpl service = new TimeEventServiceImpl(listener, 5);
-		long currentTime = 10;
-		List<TimeEvent> events = new ArrayList<>();
-		for(int i = 0; i < 10; i++) {
-            events.add(new MockTimeEvent(currentTime));
-        }
-		
-		service.setCurrentTime(currentTime);
-		service.offer(events);
-		Future<Long> f = service.start();
-		
-		try {
-			Long ret = f.get();
-		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (long currentTime = 10; currentTime < 100; currentTime += 10) {
+			List<TimeEvent> events = new ArrayList<>();
+			for (int i = 0; i < 10; i++) {
+				events.add(new MockTimeEvent(currentTime));
+			}
+			service.offer(currentTime, events);
+			
+			Future<Long> f = service.start();
+			
+			try {
+				Long ret = f.get();
+				Assertions.assertEquals(events.size(), ret);
+			} catch (InterruptedException | ExecutionException e) {
+				e.printStackTrace();
+			}
 		}
-		service.terminate();
 		System.out.println("testOffer done");
 	}
 }

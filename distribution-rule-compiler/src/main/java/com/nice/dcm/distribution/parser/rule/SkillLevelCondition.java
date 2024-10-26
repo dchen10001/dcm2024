@@ -1,5 +1,7 @@
 package com.nice.dcm.distribution.parser.rule;
 
+import com.nice.dcm.distribution.parser.node.Condition;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,4 +39,16 @@ public class SkillLevelCondition implements Comparable<SkillLevelCondition> {
         }
         return condition.compareTo(o.condition);
     }
+    
+	public boolean evaluate(String skillOid, int left) {
+		if (!this.skillOid.equals(skillOid)) {
+			return false;
+		}
+		
+		if (condition == null) {
+			return true;
+		}
+		
+		return condition.evaluate(left);
+	}
 }

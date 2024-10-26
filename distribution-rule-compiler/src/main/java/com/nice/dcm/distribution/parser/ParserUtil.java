@@ -5,6 +5,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 
 import com.nice.dcm.distribution.listener.ThrowingErrorListener;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
+import com.nice.dcm.distribution.parser.engine.SkillRuleVisitorImpl;
 import com.nice.dcm.distribution.parser.rule.ActionRule;
 import com.nice.dcm.distribution.parser.rule.AndSkillsRule;
 import com.nice.dcm.distribution.parser.rule.BinaryOperatorRule;
@@ -22,11 +23,12 @@ import com.nice.dcm.distribution.parser.rule.WaitRule;
 public class ParserUtil {
     private ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
-    protected DistributionRulesParser parserScript(String script) {
+    public DistributionRulesParser parserScript(String script) {
     	DistributionRulesLexer tokenSource = new DistributionRulesLexer(CharStreams.fromString(script));
     	tokenSource.removeErrorListeners();
     	tokenSource.addErrorListener(errorListener);
         CommonTokenStream tokens = new CommonTokenStream(tokenSource);
+        
         DistributionRulesParser parser = new DistributionRulesParser(tokens);
         parser.addErrorListener(errorListener);
         parser.addErrorListener(errorListener);

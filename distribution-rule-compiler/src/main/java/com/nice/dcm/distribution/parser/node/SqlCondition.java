@@ -1,4 +1,4 @@
-package com.nice.dcm.distribution.parser.rule;
+package com.nice.dcm.distribution.parser.node;
 
 import lombok.Getter;
 import lombok.ToString;

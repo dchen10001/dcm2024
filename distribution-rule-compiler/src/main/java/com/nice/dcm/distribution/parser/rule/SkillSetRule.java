@@ -2,6 +2,9 @@ package com.nice.dcm.distribution.parser.rule;
 
 import java.util.Collection;
 
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.NodeType;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

@@ -1,6 +1,7 @@
-package com.nice.dcm.distribution.parser.rule;
+package com.nice.dcm.distribution.parser.node;
 
 public enum NodeType {
+	AGENTOID,
 	ROUTINGRULESET, ROUTINGRULEGROUP, ROUTINGRULE, ACTIONRULE, SKILLANDRULE, SKILLRULE, SKILLSETRULE, WAITING, ORDER, OID, 
 	QUEUE_STATUS, BINARY_OPERATOR, SQL_OPERATOR, CONDITION;
 }

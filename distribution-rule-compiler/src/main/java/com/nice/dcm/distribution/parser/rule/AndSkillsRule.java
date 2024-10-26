@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.NodeType;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

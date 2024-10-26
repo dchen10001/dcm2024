@@ -3,6 +3,11 @@ package com.nice.dcm.distribution.parser.rule;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+import com.nice.dcm.distribution.parser.node.Condition;
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.NodeType;
+
 import lombok.AllArgsConstructor;
 
 @Getter

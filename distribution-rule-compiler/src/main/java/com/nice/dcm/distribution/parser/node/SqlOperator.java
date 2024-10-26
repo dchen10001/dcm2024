@@ -1,4 +1,4 @@
-package com.nice.dcm.distribution.parser.rule;
+package com.nice.dcm.distribution.parser.node;
 
 public enum SqlOperator {
     IN("in"), NOT_IN("not in");

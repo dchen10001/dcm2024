@@ -6,9 +6,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.nice.dcm.distribution.parser.DistributionRulesParser.BinaryOperatorContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorContext;
-import com.nice.dcm.distribution.parser.rule.BinaryOperator;
-import com.nice.dcm.distribution.parser.rule.Node;
-import com.nice.dcm.distribution.parser.rule.SqlOperator;
+import com.nice.dcm.distribution.parser.node.BinaryOperator;
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.SqlOperator;
 
 public interface SkillRuleVistor extends DistributionRulesVisitor<Node> {
     /**

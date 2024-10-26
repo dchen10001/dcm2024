@@ -1,4 +1,4 @@
-package com.nice.dcm.distribution.parser.rule;
+package com.nice.dcm.distribution.parser.node;
 
 public enum BinaryOperator {
     LESS_THAN("<"), LESS_THAN_OR_EQUAL("<="), EQUAL("="), NOT_EQUAL("<>"), GREATER_THAN(">"),

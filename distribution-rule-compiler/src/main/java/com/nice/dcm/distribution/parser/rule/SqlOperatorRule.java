@@ -1,5 +1,9 @@
 package com.nice.dcm.distribution.parser.rule;
 
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.NodeType;
+import com.nice.dcm.distribution.parser.node.SqlOperator;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

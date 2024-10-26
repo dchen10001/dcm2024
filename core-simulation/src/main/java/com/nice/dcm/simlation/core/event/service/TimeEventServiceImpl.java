@@ -31,22 +31,9 @@ public class TimeEventServiceImpl implements EventService<TimeEvent> {
 	}
 	
 	@Override
-	public boolean offer(TimeEvent e) {
-		if(e.getTimestamp() == currentTime) {
-			return blockingQueue.offer(e);
-		} else {
-			String msg = "Invalid TimeEvent. currentTime is " 
-					+ currentTime + ", event time is " + e.getTimestamp() + ", event detail: " + e;
-			logger.error(msg);
-			throw new IllegalArgumentException(msg);
-		}
-	}
-
-	@Override
-	public void offer(List<TimeEvent> events) {
-		for (TimeEvent e : events) {
-			offer(e);
-		}
+	public void offer(long currentTime, List<TimeEvent> events) {
+		setCurrentTime(currentTime);
+		events.forEach(this::offer);
 	}
 	
 	@Override
@@ -55,22 +42,25 @@ public class TimeEventServiceImpl implements EventService<TimeEvent> {
 	}
 
 	protected long run() {
+		long eventCount = 0;
 		while (true) {
+			TimeEvent e;
 			try {
-				TimeEvent e = blockingQueue.poll(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
+				e = blockingQueue.poll(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
 				if (e == null && blockingQueue.isEmpty()) {
 					break;
 				} else if (e != null) {
+					eventCount++;
 					executor.submit(() -> {
 						listener.onEvent(e);
 					});
 				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			} catch (InterruptedException ex) {
+				logger.error("InterruptedException", ex);
+				Thread.currentThread().interrupt();
 			}
 		}
-
-		return 0;
+		return eventCount;
 	}
 
 	/**
@@ -80,7 +70,22 @@ public class TimeEventServiceImpl implements EventService<TimeEvent> {
 		return blockingQueue.size();
 	}
 	
-	public void setCurrentTime(long currentTime) {
+	protected boolean offer(TimeEvent e) {
+		if(e.getTimestamp() == currentTime) {
+			return blockingQueue.offer(e);
+		} else {
+			String msg = "Invalid TimeEvent. currentTime is " 
+					+ currentTime + ", event time is " + e.getTimestamp() + ", event detail: " + e;
+			logger.error(msg);
+			throw new IllegalArgumentException(msg);
+		}
+	}
+	
+	protected void setCurrentTime(long currentTime) {
+		if (this.size() > 0) {
+			throw new IllegalStateException("Queue is not empty. size is " + this.size());
+		}
+		
 		if (this.currentTime < currentTime) {
 			this.currentTime = currentTime;
 			listener.setCurrentTime(currentTime);

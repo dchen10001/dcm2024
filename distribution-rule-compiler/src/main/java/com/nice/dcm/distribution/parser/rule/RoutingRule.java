@@ -2,6 +2,8 @@ package com.nice.dcm.distribution.parser.rule;
 
 import java.util.Set;
 
+import com.nice.dcm.distribution.parser.node.Node;
+import com.nice.dcm.distribution.parser.node.NodeType;
 import com.nice.dcm.distribution.parser.rule.QueueStatusRule.QueueStatus;
 
 import lombok.AllArgsConstructor;

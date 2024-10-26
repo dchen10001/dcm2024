@@ -18,11 +18,7 @@ public interface EventService<E> {
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this queue
      */
-    boolean offer(E e);
-    
-    void offer(List<E> events);
-    
-    void setCurrentTime(long currentTime);
+    void offer(long currentTime, List<E> events);
     
     /**
      * start the event service at the time. Any event must be in the same time.
