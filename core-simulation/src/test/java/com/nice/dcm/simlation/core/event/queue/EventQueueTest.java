@@ -1,5 +1,7 @@
 package com.nice.dcm.simlation.core.event.queue;
 
+import java.util.Comparator;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,7 @@ import com.nice.dcm.simlation.core.event.EventType;
 import com.nice.dcm.simlation.core.event.TimeEvent;
 import com.nice.dcm.simlation.core.event.TimeEventImpl;
 
-class EventQueueTest {
+class EventQueueTest extends BaseEventQueueTest {
 	
 	@BeforeEach
 	void setUp() {
@@ -20,7 +22,7 @@ class EventQueueTest {
 	
 	@Test
 	void testAddEventSorting() {
-		EventQueue<TimeEvent> queue = getQueue(10, 5);
+		EventQueue<TimeEvent> queue = getSortedByTimeQueue(10, 5, false);
 		int i = queue.size();		
 	    TimeEvent e = queue.peek();
 	    TimeEvent e1 = queue.peek();
@@ -41,9 +43,33 @@ class EventQueueTest {
 		queue.clear();
 	}
 	
+	
+	@Test
+	void testAddEventSortedById() {
+		EventQueue<TimeEvent> queue = getSortedByIdQueueOrder(10, 5, false);
+		int i = queue.size();		
+		TimeEvent e = queue.peek();
+		TimeEvent e1 = queue.peek();
+		Assertions.assertSame(e, e1);
+		long currentId = e.getId();
+		int size = 0;
+		
+		while (!queue.isEmpty()) {
+			e = queue.poll();
+			if (e.getId() < currentId) {
+				Assertions.fail("Events are not sorted");
+			} else {
+				currentId = e.getId();
+			}
+			size++;
+		}
+		Assertions.assertEquals(i, size);
+		queue.clear();
+	}
+	
 	@Test
 	void testFindRemove() {
-		EventQueue<TimeEvent> queue = getQueue(10, 5);
+		EventQueue<TimeEvent> queue = getSortedByTimeQueue(10, 5, false);
 		
 		int size = queue.size();
 		
@@ -70,7 +96,7 @@ class EventQueueTest {
 	
 	@Test
 	void testPerformance() {
-		EventQueue<TimeEvent> queue = getQueue(400, 25);
+		EventQueue<TimeEvent> queue = getSortedByTimeQueue(400, 25, false);
 		
 		int size = queue.size();
 		Assertions.assertEquals(20000, size);
@@ -91,33 +117,11 @@ class EventQueueTest {
 		end = System.currentTimeMillis();
 		System.out.println("Time taken to poll all = " + (end - start) + " ms");
 		
-		queue = getQueue(400, 25);
+		queue = getSortedByTimeQueue(400, 25, false);
 		start = System.currentTimeMillis();
 		queue.clear();
 		end = System.currentTimeMillis();
 		System.out.println("Time taken to clear all = " + (end - start) + " ms");
 		
-	}
-	
-	private EventQueue<TimeEvent> getQueue(int iteration, int size) {
-		EventQueue<TimeEvent> queue = new EventQueue<>();
-		long timestamp = 0;
-		for (int i = 0; i < iteration * size; i++) {
-			ContactEventImpl event = new ContactEventImpl(timestamp, "ctOid" + i, EventType.CONTACT_ARRIVAL);
-			if (i > 0 && i % size == 0) {
-				timestamp += 10;
-			}
-			queue.add(event);
-		}
-		
-		timestamp = 0;
-		for (int i = 0; i < iteration * size; i++) {
-			AgentEvent agentEvent = new AgentEventImpl(i * 100, "agentOid" + i, EventType.AGENT_LOGIN);
-			if (i > 0 && i % size == 0) {
-				timestamp += 10;
-			}
-			queue.add(agentEvent);
-		}
-		return queue;
 	}
 }

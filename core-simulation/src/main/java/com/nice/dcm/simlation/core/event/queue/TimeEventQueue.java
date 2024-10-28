@@ -7,7 +7,7 @@ import java.util.List;
 import com.nice.dcm.simlation.core.event.TimeEvent;
 import com.nice.dcm.simlation.core.event.service.generator.EventGenerator;
 
-public class TimeEventQueue extends EventQueue<TimeEvent> implements EventGenerator {
+public class TimeEventQueue extends EventQueueImpl<TimeEvent> implements EventGenerator {
 
 	@Override
 	public long getEventTime() {
