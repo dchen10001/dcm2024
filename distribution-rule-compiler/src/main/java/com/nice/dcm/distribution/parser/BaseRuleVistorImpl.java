@@ -39,6 +39,7 @@ public abstract class BaseRuleVistorImpl extends BaseVistorImpl {
     	super();
     }
 
+    @Override
     public ConditionRule visitLevelCondition(LevelConditionContext ctx) {
         BinaryOperatorContext binaryOperator = ctx.binaryOperator();
         List<TerminalNode> numbers = ctx.NUMBER();

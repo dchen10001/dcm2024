@@ -1,0 +1,40 @@
+T__0=1
+T__1=2
+T__2=3
+T__3=4
+T__4=5
+T__5=6
+T__6=7
+T__7=8
+T__8=9
+LESS_THAN=10
+LESS_THAN_EQUAL=11
+EQUAL=12
+NOT_EQUAL=13
+GREATER_THAN=14
+GREATER_THAN_EQUAL=15
+IN=16
+NOT_IN=17
+LEAST_BUSY=18
+QUEUE_TO=19
+NUMBER=20
+UUID_OR_HEXA=21
+WHITESPACE=22
+'and'=1
+'('=2
+','=3
+')'=4
+'@S:'=5
+'level'=6
+'..'=7
+'with priority'=8
+'wait'=9
+'<'=10
+'<='=11
+'='=12
+'>'=14
+'>='=15
+'in'=16
+'not in'=17
+'least busy of'=18
+'queue to'=19
