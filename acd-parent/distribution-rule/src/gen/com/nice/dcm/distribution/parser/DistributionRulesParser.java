@@ -25,13 +25,13 @@ public class DistributionRulesParser extends Parser {
 		RULE_routingRuleSet = 0, RULE_routingWaitingRuleGroup = 1, RULE_routingRuleGroup = 2, 
 		RULE_routingRule = 3, RULE_ruleAction = 4, RULE_andSkills = 5, RULE_skillOrSet = 6, 
 		RULE_skillSet = 7, RULE_skill = 8, RULE_levelCondition = 9, RULE_binaryOperator = 10, 
-		RULE_sqlOperator = 11, RULE_entity_identifier = 12, RULE_order = 13, RULE_waitRule = 14, 
-		RULE_queue_status = 15;
+		RULE_sqlOperator = 11, RULE_entity_identifier = 12, RULE_priority = 13, 
+		RULE_waitRule = 14, RULE_queue_status = 15;
 	private static String[] makeRuleNames() {
 		return new String[] {
 			"routingRuleSet", "routingWaitingRuleGroup", "routingRuleGroup", "routingRule", 
 			"ruleAction", "andSkills", "skillOrSet", "skillSet", "skill", "levelCondition", 
-			"binaryOperator", "sqlOperator", "entity_identifier", "order", "waitRule", 
+			"binaryOperator", "sqlOperator", "entity_identifier", "priority", "waitRule", 
 			"queue_status"
 		};
 	}
@@ -291,8 +291,8 @@ public class DistributionRulesParser extends Parser {
 		public AndSkillsContext andSkills() {
 			return getRuleContext(AndSkillsContext.class,0);
 		}
-		public OrderContext order() {
-			return getRuleContext(OrderContext.class,0);
+		public PriorityContext priority() {
+			return getRuleContext(PriorityContext.class,0);
 		}
 		public Queue_statusContext queue_status() {
 			return getRuleContext(Queue_statusContext.class,0);
@@ -338,7 +338,7 @@ public class DistributionRulesParser extends Parser {
 			setState(53);
 			andSkills();
 			setState(54);
-			order();
+			priority();
 			}
 		}
 		catch (RecognitionException re) {
@@ -900,30 +900,30 @@ public class DistributionRulesParser extends Parser {
 	}
 
 	@SuppressWarnings("CheckReturnValue")
-	public static class OrderContext extends ParserRuleContext {
+	public static class PriorityContext extends ParserRuleContext {
 		public TerminalNode NUMBER() { return getToken(DistributionRulesParser.NUMBER, 0); }
-		public OrderContext(ParserRuleContext parent, int invokingState) {
+		public PriorityContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_order; }
+		@Override public int getRuleIndex() { return RULE_priority; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).enterOrder(this);
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).enterPriority(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).exitOrder(this);
+			if ( listener instanceof DistributionRulesListener ) ((DistributionRulesListener)listener).exitPriority(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof DistributionRulesVisitor ) return ((DistributionRulesVisitor<? extends T>)visitor).visitOrder(this);
+			if ( visitor instanceof DistributionRulesVisitor ) return ((DistributionRulesVisitor<? extends T>)visitor).visitPriority(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final OrderContext order() throws RecognitionException {
-		OrderContext _localctx = new OrderContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_order);
+	public final PriorityContext priority() throws RecognitionException {
+		PriorityContext _localctx = new PriorityContext(_ctx, getState());
+		enterRule(_localctx, 26, RULE_priority);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{

@@ -62,7 +62,7 @@ levelCondition
 binaryOperator
 sqlOperator
 entity_identifier
-order
+priority
 waitRule
 queue_status
 

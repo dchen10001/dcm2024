@@ -1,6 +1,6 @@
 package com.nice.dcm.simulation.distribution.rule;
 
-public interface SkillLevelCondition {
+public interface SkillLevelCondition extends Comparable<SkillLevelCondition> {
 	String getSkillOid();
 	Condition getCondition();
 	

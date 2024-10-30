@@ -1,13 +1,17 @@
-package com.nice.dcm.simulation.distribution.rule.node;
+package com.nice.dcm.simulation.distribution.node;
 
-import com.nice.dcm.simulation.distribution.operator.SqlOperator;
-import com.nice.dcm.simulation.distribution.rule.Node;
-import com.nice.dcm.simulation.distribution.rule.NodeType;
+import com.nice.dcm.simulation.distribution.rule.operator.SqlOperator;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+
+/**
+ * Node implementation for SQL_OPERATOR node operator: SQL style operator
+ * supported operators: IN, NOT IN, 
+ * future support(maybe) BETWEEN, NOT BETWEEN
+ */
 
 @Getter
 @EqualsAndHashCode(callSuper=false)

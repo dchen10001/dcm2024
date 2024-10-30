@@ -1,4 +1,4 @@
-package com.nice.dcm.simulation.distribution.operator;
+package com.nice.dcm.simulation.distribution.rule.operator;
 
 import com.nice.dcm.simulation.distribution.rule.Condition;
 
@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class SqlCondition implements Condition, Comparable<Condition> {
+public class SqlCondition implements Condition {
     private final SqlOperator sqlOperator;
     private final int lowerBound;
     private final int upperBound;

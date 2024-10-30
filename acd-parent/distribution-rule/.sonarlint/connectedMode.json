@@ -1,0 +1,4 @@
+{
+    "sonarQubeUri": "https://sonar.nice.com",
+    "projectKey": "com.nice.lib-dcm-distribution-rules"
+}

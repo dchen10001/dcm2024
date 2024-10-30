@@ -3,7 +3,7 @@ package com.nice.dcm.simulation.distribution.rule;
 /**
  * interface of condition for binary condition or sql condition.
  */
-public interface Condition {
+public interface Condition extends Comparable<Condition> {
 	/**
 	 * evaluate if the left value is satisfy the condition
 	 * @param left

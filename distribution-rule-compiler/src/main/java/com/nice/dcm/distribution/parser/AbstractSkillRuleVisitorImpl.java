@@ -45,22 +45,7 @@ public abstract class AbstractSkillRuleVisitorImpl extends BaseRuleVistorImpl {
         return new SkillSetRule(skillLevelConditions);
     } 
     
-    /**
-     * return a single skill with or without condition.
-     * if condition is null, a skill in any level will match it.
-     */
-    @Override
-    public SkillRule visitSkill(SkillContext ctx) {
-        OidRule oidRule = visitEntity_identifier(ctx.entity_identifier());
-        
-        LevelConditionContext levelCtx = ctx.levelCondition();
-        if (levelCtx == null) {
-            return new SkillRule(oidRule.getOid());
-        }
-        ConditionRule conditionRule = visitLevelCondition(levelCtx);
-        return new SkillRule(oidRule.getOid(), conditionRule.getCondition());
-    }
-    
+
     /**
      * Visit a queue status node
      * 
@@ -79,4 +64,20 @@ public abstract class AbstractSkillRuleVisitorImpl extends BaseRuleVistorImpl {
         SkillRule node = visitSkill(ctx);
         return node.getSkillLevelCondition();
     }
+    
+    /**
+     * return a single skill with or without condition.
+     * if condition is null, a skill in any level will match it.
+     */
+    @Override
+    public SkillRule visitSkill(SkillContext ctx) {
+        OidRule oidRule = visitEntity_identifier(ctx.entity_identifier());
+        
+        LevelConditionContext levelCtx = ctx.levelCondition();
+        if (levelCtx == null) {
+            return new SkillRule(oidRule.getOid());
+        }
+        ConditionRule conditionRule = visitLevelCondition(levelCtx);
+        return new SkillRule(oidRule.getOid(), conditionRule.getCondition());
+    }    
 }

@@ -1,4 +1,4 @@
-package com.nice.dcm.simulation.distribution.operator;
+package com.nice.dcm.simulation.distribution.rule.operator;
 
 import com.nice.dcm.simulation.distribution.rule.Condition;
 import lombok.Getter;
@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class BinaryCondition implements Condition, Comparable<Condition> {
+public class BinaryCondition implements Condition {
     private final BinaryOperator operator;
     private final int right;
     

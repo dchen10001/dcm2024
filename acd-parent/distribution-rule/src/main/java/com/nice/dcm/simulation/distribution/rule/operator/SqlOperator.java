@@ -1,4 +1,4 @@
-package com.nice.dcm.simulation.distribution.operator;
+package com.nice.dcm.simulation.distribution.rule.operator;
 
 public enum SqlOperator {
     IN("in"), NOT_IN("not in");

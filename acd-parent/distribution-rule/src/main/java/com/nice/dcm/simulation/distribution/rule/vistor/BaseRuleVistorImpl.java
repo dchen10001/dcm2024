@@ -8,17 +8,29 @@ import org.antlr.v4.runtime.tree.RuleNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.nice.dcm.distribution.parser.DistributionRulesParser.BinaryOperatorContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.Entity_identifierContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.LevelConditionContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.PriorityContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.Queue_statusContext;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.RuleActionContext;
 import com.nice.dcm.distribution.parser.DistributionRulesParser.SqlOperatorContext;
-import com.nice.dcm.simulation.distribution.operator.BinaryCondition;
-import com.nice.dcm.simulation.distribution.operator.BinaryOperator;
-import com.nice.dcm.simulation.distribution.operator.SqlCondition;
-import com.nice.dcm.simulation.distribution.operator.SqlOperator;
+import com.nice.dcm.distribution.parser.DistributionRulesParser.WaitRuleContext;
+import com.nice.dcm.simulation.distribution.node.ActionNodeImpl;
+import com.nice.dcm.simulation.distribution.node.BinaryOperatorNodeImpl;
+import com.nice.dcm.simulation.distribution.node.ConditionNodeImpl;
+import com.nice.dcm.simulation.distribution.node.EntityIdentifierNodeImpl;
+import com.nice.dcm.simulation.distribution.node.Node;
+import com.nice.dcm.simulation.distribution.node.PriorityNodeImpl;
+import com.nice.dcm.simulation.distribution.node.QueueStatusNodeImpl;
+import com.nice.dcm.simulation.distribution.node.SqlOperatorNodeImpl;
+import com.nice.dcm.simulation.distribution.node.WaitNodeImpl;
+import com.nice.dcm.simulation.distribution.node.ActionNodeImpl.ActionType;
+import com.nice.dcm.simulation.distribution.node.QueueStatusNodeImpl.QueueStatus;
 import com.nice.dcm.simulation.distribution.rule.Condition;
-import com.nice.dcm.simulation.distribution.rule.Node;
-import com.nice.dcm.simulation.distribution.rule.node.BinaryOperatorNodeImpl;
-import com.nice.dcm.simulation.distribution.rule.node.ConditionNodeImpl;
-import com.nice.dcm.simulation.distribution.rule.node.SqlOperatorNodeImpl;
+import com.nice.dcm.simulation.distribution.rule.operator.BinaryCondition;
+import com.nice.dcm.simulation.distribution.rule.operator.BinaryOperator;
+import com.nice.dcm.simulation.distribution.rule.operator.SqlCondition;
+import com.nice.dcm.simulation.distribution.rule.operator.SqlOperator;
 
 public abstract class BaseRuleVistorImpl implements RuleVistor {
 	protected BaseRuleVistorImpl() {
@@ -45,18 +57,110 @@ public abstract class BaseRuleVistorImpl implements RuleVistor {
         return null;
     }
     
+	/**************************************************************************
+	 * The following methods are used to convert the context to the corresponding
+	 * operator or condition. all methods are independent and can be moved to other classes.
+	 *************************************************************************/
+    /**
+     * Visit a queue status node
+     * 
+     * @param ctx
+     * @return
+     */
+    @Override
+    public QueueStatusNodeImpl visitQueue_status(Queue_statusContext ctx) {
+        if (ctx.LEAST_BUSY() != null) {
+            return new QueueStatusNodeImpl(QueueStatus.LEAST_BUSY);
+        }
+        return null;
+    }
+    
+    /**
+     * Visit an entity identifier node
+     * 
+     * @param ctx
+     * @return
+     */
+    @Override
+    public EntityIdentifierNodeImpl visitEntity_identifier(Entity_identifierContext ctx) {
+        TerminalNode oidNode = ctx.NUMBER();
+        if (oidNode == null) {
+            oidNode = ctx.UUID_OR_HEXA();
+        }
+        return new EntityIdentifierNodeImpl(oidNode.getText());
+    }
+    
+    /**
+     * Visit a rule action node
+     * 
+     * @param ctx
+     * @return
+     */
+    @Override
+    public ActionNodeImpl visitRuleAction(RuleActionContext ctx) {
+        if (ctx.QUEUE_TO() != null) {
+            return new ActionNodeImpl(ActionType.QUEUE_TO);
+        }
+        return null;
+    }
+    
+    /**
+     * Visit an order node
+     * 
+     * @param ctx
+     * @return
+     */
+    @Override
+    public PriorityNodeImpl visitPriority(PriorityContext ctx) {
+        return new PriorityNodeImpl(toNumber(ctx.NUMBER()));
+    }
+    
+    /**
+     * Visit a wait node
+     * 
+     * @param ctx
+     * @return
+     */
+    @Override
+    public WaitNodeImpl visitWaitRule(WaitRuleContext ctx) {
+        return new WaitNodeImpl(toNumber(ctx.NUMBER()));
+    }
+    
+	/**************************************************************************
+	 * The following methods are used to convert the context to the corresponding
+	 * operator or condition.
+	 *************************************************************************/
+    
+	/**
+	 * Convert the binary operator context to binary operator node.
+	 * 
+	 * @param ctx
+	 * @return
+	 */
     @Override
     public BinaryOperatorNodeImpl visitBinaryOperator(BinaryOperatorContext ctx) {
         BinaryOperator operator = toBinaryOperator(ctx);
         return new BinaryOperatorNodeImpl(operator);       
     }
 
+	/**
+	 * Convert the sql operator context to sql operator node.
+	 * 
+	 * @param ctx
+	 * @return
+	 */
     @Override
     public SqlOperatorNodeImpl visitSqlOperator(SqlOperatorContext ctx) {
         SqlOperator operator = toSqlOperator(ctx);
         return new SqlOperatorNodeImpl(operator);
     }
     
+	/**
+	 * Convert the level condition context to condition node.
+	 * 
+	 * @param ctx
+	 * @return
+	 */
     @Override
     public ConditionNodeImpl visitLevelCondition(LevelConditionContext ctx) {
         BinaryOperatorContext binaryOperator = ctx.binaryOperator();
@@ -70,7 +174,7 @@ public abstract class BaseRuleVistorImpl implements RuleVistor {
         return new ConditionNodeImpl(condition);
     }
     
-    private Condition toCondition(BinaryOperatorContext binaryOperator, List<TerminalNode> numbers) {
+    private BinaryCondition toCondition(BinaryOperatorContext binaryOperator, List<TerminalNode> numbers) {
         if (binaryOperator == null) {
             return null;
         }
@@ -79,7 +183,7 @@ public abstract class BaseRuleVistorImpl implements RuleVistor {
         return new BinaryCondition(binaryOperatorNode.getOperator(), level);
     }
 
-    private Condition toCondition(SqlOperatorContext sqlOperator, List<TerminalNode> numbers) {
+    private SqlCondition toCondition(SqlOperatorContext sqlOperator, List<TerminalNode> numbers) {
         if (sqlOperator == null) {
             return null;
         }

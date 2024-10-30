@@ -89,11 +89,11 @@ public interface DistributionRulesVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitEntity_identifier(DistributionRulesParser.Entity_identifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DistributionRulesParser#order}.
+	 * Visit a parse tree produced by {@link DistributionRulesParser#priority}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOrder(DistributionRulesParser.OrderContext ctx);
+	T visitPriority(DistributionRulesParser.PriorityContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DistributionRulesParser#waitRule}.
 	 * @param ctx the parse tree

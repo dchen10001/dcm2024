@@ -138,15 +138,15 @@ public interface DistributionRulesListener extends ParseTreeListener {
 	 */
 	void exitEntity_identifier(DistributionRulesParser.Entity_identifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link DistributionRulesParser#order}.
+	 * Enter a parse tree produced by {@link DistributionRulesParser#priority}.
 	 * @param ctx the parse tree
 	 */
-	void enterOrder(DistributionRulesParser.OrderContext ctx);
+	void enterPriority(DistributionRulesParser.PriorityContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link DistributionRulesParser#order}.
+	 * Exit a parse tree produced by {@link DistributionRulesParser#priority}.
 	 * @param ctx the parse tree
 	 */
-	void exitOrder(DistributionRulesParser.OrderContext ctx);
+	void exitPriority(DistributionRulesParser.PriorityContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link DistributionRulesParser#waitRule}.
 	 * @param ctx the parse tree

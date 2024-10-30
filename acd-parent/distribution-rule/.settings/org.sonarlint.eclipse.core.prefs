@@ -1,0 +1,5 @@
+autoEnabled=true
+bindingSuggestionsDisabled=false
+eclipse.preferences.version=1
+projectKey=com.nice.lib-dcm-distribution-rules
+serverId=sonar.nice.com

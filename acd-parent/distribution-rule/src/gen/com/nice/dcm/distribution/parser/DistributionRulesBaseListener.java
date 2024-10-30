@@ -173,13 +173,13 @@ public class DistributionRulesBaseListener implements DistributionRulesListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOrder(DistributionRulesParser.OrderContext ctx) { }
+	@Override public void enterPriority(DistributionRulesParser.PriorityContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOrder(DistributionRulesParser.OrderContext ctx) { }
+	@Override public void exitPriority(DistributionRulesParser.PriorityContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

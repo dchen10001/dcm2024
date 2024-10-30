@@ -7,7 +7,7 @@ routingWaitingRuleGroup: waitRule routingRuleGroup;
 
 routingRuleGroup: (routingRule)+;
 
-routingRule: ruleAction (queue_status)? andSkills order;
+routingRule: ruleAction (queue_status)? andSkills priority;
 
 /* if we have new action, such as ROUTE_TO, 
 * we can add it here as 
@@ -48,7 +48,7 @@ NOT_IN: 'not in';
 
 entity_identifier: UUID_OR_HEXA | NUMBER;
 
-order: 'with priority' NUMBER;
+priority: 'with priority' NUMBER;
 
 waitRule: 'wait' NUMBER;
 
