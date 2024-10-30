@@ -1,6 +1,5 @@
 package com.nice.dcm.simulation.distribution.rule.vistor;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,7 +24,7 @@ public class SkillRuleVisitorImpl extends AbstractRuleVistorImpl {
 	@Override
 	public RoutingRuleSetNodeImpl visitRoutingRuleSet(RoutingRuleSetContext ctx) {
 		RoutingRuleGroupNodeImpl groupRule = visitRoutingRuleGroup(ctx.routingRuleGroup());
-		if(ctx.routingWaitingRuleGroup().size() == 0) {
+		if(ctx.routingWaitingRuleGroup().isEmpty()) {
 			RoutingRuleSetImpl ruleSet = new RoutingRuleSetImpl(groupRule.getRoutingGroupRule());
 			return new RoutingRuleSetNodeImpl(ruleSet);
 		}
@@ -39,15 +38,13 @@ public class SkillRuleVisitorImpl extends AbstractRuleVistorImpl {
 		RoutingGroupRuleImpl rule = visitRoutingRuleGroup(ctx.routingRuleGroup()).getRoutingGroupRule();
 		int waitAfterSeconds = visitWaitRule(ctx.waitRule()).getWaitFor();
 		rule.setWaitAfterSeconds(waitAfterSeconds);
-		//TODO: validation
 		return new RoutingRuleGroupNodeImpl(rule);
 	}
 
 	@Override
 	public RoutingRuleGroupNodeImpl visitRoutingRuleGroup(RoutingRuleGroupContext ctx) {
-		List<RoutingNodeImpl> ruleNodes = ctx.routingRule().stream().map(this::visitRoutingRule).collect(Collectors.toList());
+		List<RoutingNodeImpl> ruleNodes = ctx.routingRule().stream().map(this::visitRoutingRule).toList();
 		List<RoutingRuleImpl> rules = ruleNodes.stream().map(RoutingNodeImpl::getRoutingRule).toList();
-		//TODO: validation
 		return new RoutingRuleGroupNodeImpl(rules);
 	}
 

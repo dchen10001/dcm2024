@@ -16,7 +16,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public class AndSkillLevelConditionsImpl implements AndSkillLevelConditions {
-	private final Collection<SkillLevelCondition> skillLevelConditions;
+	protected final Collection<SkillLevelCondition> skillLevelConditions;
 	
 	public AndSkillLevelConditionsImpl(Collection<SkillLevelCondition> skillLevelConditions) {
 		List<SkillLevelCondition> skillLevelConditionsList = new ArrayList<>(skillLevelConditions);

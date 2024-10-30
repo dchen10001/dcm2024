@@ -1,13 +1,13 @@
 package com.nice.dcm.simulation.distribution.rule;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * interface of ACD skill queue.
  */
 public interface SkillQueueSelector extends AndSkillLevelConditions {
 	final long INVALID_TIMESTAMP = -1;
-	final AtomicLong idGenerator = new AtomicLong(0);
+	final AtomicInteger idGenerator = new AtomicInteger(0);
 	
 	/*
 	 * return a unique id of skill queue.
@@ -19,12 +19,7 @@ public interface SkillQueueSelector extends AndSkillLevelConditions {
 	 */
 	int getChannelId();
 	
-	/*
-	 * if it is true, contact waiting time must be recorded.
-	 */
-	boolean isRequiredWaitingTime();
-	
-	static long generateId() {
+	static int generateId() {
 		return idGenerator.getAndIncrement();
 	}
 	
