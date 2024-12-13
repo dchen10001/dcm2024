@@ -2,9 +2,10 @@ package com.nice.dcm.simulation.distribution.node;
 
 import java.util.Set;
 
-import com.nice.dcm.simulation.distribution.node.ActionNodeImpl.ActionType;
-import com.nice.dcm.simulation.distribution.node.QueueStatusNodeImpl.QueueStatus;
+import com.nice.dcm.simulation.distribution.rule.ActionType;
 import com.nice.dcm.simulation.distribution.rule.AndSkillLevelConditions;
+import com.nice.dcm.simulation.distribution.rule.QueueStatus;
+import com.nice.dcm.simulation.distribution.rule.RoutingRule;
 import com.nice.dcm.simulation.distribution.rule.RoutingRuleImpl;
 
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper=false)
 @ToString
 public class RoutingNodeImpl implements Node {
-	private final RoutingRuleImpl routingRule;
+	private final RoutingRule routingRule;
 	
 	public RoutingNodeImpl(ActionType action, QueueStatus queueStatus, Set<AndSkillLevelConditions> skills,
 			int priority) {

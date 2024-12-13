@@ -20,7 +20,8 @@ import com.nice.dcm.simulation.distribution.node.SkillNodeImpl;
 import com.nice.dcm.simulation.distribution.node.SkillSetNodeImpl;
 import com.nice.dcm.simulation.distribution.node.SqlOperatorNodeImpl;
 import com.nice.dcm.simulation.distribution.node.WaitNodeImpl;
-import com.nice.dcm.simulation.distribution.rule.vistor.SkillRuleVisitorImpl;
+import com.nice.dcm.simulation.distribution.parser.vistor.SkillRuleVisitorImpl;
+import com.nice.dcm.simulation.distribution.rule.RoutingRuleSet;
 
 public class ParserUtil {
 	
@@ -38,7 +39,6 @@ public class ParserUtil {
         return parser;
     }
 
-    
     public WaitNodeImpl visitWait(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
     	WaitRuleContext waitRule = parser.waitRule();
@@ -95,9 +95,10 @@ public class ParserUtil {
     	return (RoutingRuleGroupNodeImpl)parser.routingWaitingRuleGroup().accept(vistor);    
     }
     
-    public RoutingRuleSetNodeImpl visitRoutingRuleSet(String script, SkillRuleVisitorImpl vistor) {
+    public RoutingRuleSet visitRoutingRuleSet(String script, SkillRuleVisitorImpl vistor) {
     	DistributionRulesParser parser = parserScript(script);
-    	return (RoutingRuleSetNodeImpl)parser.routingRuleSet().accept(vistor);    
+    	RoutingRuleSetNodeImpl ruleSetNode = (RoutingRuleSetNodeImpl)parser.routingRuleSet().accept(vistor);    
+    	return ruleSetNode.getRuleSet();
     }
     
     public SqlOperatorNodeImpl visitSqlOperator(String script, SkillRuleVisitorImpl vistor) {

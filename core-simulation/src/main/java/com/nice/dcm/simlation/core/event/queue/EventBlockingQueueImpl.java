@@ -3,6 +3,10 @@ package com.nice.dcm.simlation.core.event.queue;
 import java.util.Comparator;
 import java.util.concurrent.PriorityBlockingQueue;
 
+/**
+ * Implement SortedQueue and it is thread-safe
+ * 
+ */
 public class EventBlockingQueueImpl<E> implements EventQueue<E> {
 	private static final int DEFAULT_INITIAL_CAPACITY = 11;
 	

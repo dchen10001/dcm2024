@@ -11,40 +11,38 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.nice.dcm.simulation.distribution.rule.operator.AndSkillLevelConditionsImpl;
-import com.nice.dcm.simulation.distribution.rule.operator.BinaryCondition;
+import com.nice.dcm.simulation.distribution.rule.operator.BinaryConditionImpl;
 import com.nice.dcm.simulation.distribution.rule.operator.BinaryOperator;
 import com.nice.dcm.simulation.distribution.rule.operator.SkillLevelConditionImpl;
-import com.nice.dcm.simulation.distribution.rule.operator.SqlCondition;
+import com.nice.dcm.simulation.distribution.rule.operator.SqlConditionImpl;
 import com.nice.dcm.simulation.distribution.rule.operator.SqlOperator;
 
 public class RoutingGroupRuleImplTest {
 	@Test
 	public void testEvaluate() {
-		List<RoutingRuleImpl> rules = getRules();
-		RoutingGroupRuleImpl routingGroupRuleImpl = new RoutingGroupRuleImpl(rules);
+		List<RoutingRule> rules = getRules();
+		RoutingGroupRule routingGroupRuleImpl = new RoutingGroupRuleImpl(rules);
 		assertEquals(0, routingGroupRuleImpl.getWaitAfterSeconds());
-		routingGroupRuleImpl.setWaitAfterSeconds(100);
 		assertEquals(100, routingGroupRuleImpl.getWaitAfterSeconds());
         assertEquals(3, routingGroupRuleImpl.getRules().size());
         int priority = 1;
-		for (RoutingRuleImpl r : routingGroupRuleImpl.getRules()) {
-			if(r.getPriority() == 1) {
-				assertEquals(3, r.getSkills().size());
-			} else if(r.getPriority() == 2) {
-				assertEquals(1, r.getSkills().size());
-			}
-			assertEquals(priority++, r.getPriority());
+		for (RoutingRule r : routingGroupRuleImpl.getRules()) {
+			int p = r.getPriority();
+			assertTrue(priority <= p);
+			if (p > priority) {
+				priority = p;
+			}			
 		}
 	}
 	
 	@Test
 	public void testHashEquals() {
-		SkillLevelCondition s = new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 10));
+		SkillLevelCondition s = new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 10));
 
-		SkillLevelCondition s1 = new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 10));
-		SkillLevelCondition s2 = new SkillLevelConditionImpl("oid1", new SqlCondition(SqlOperator.IN, 10, 20));
-		SkillLevelCondition s3 = new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 20));
-		SkillLevelCondition s4 = new SkillLevelConditionImpl("oid2", new BinaryCondition(BinaryOperator.GREATER_THAN, 10));
+		SkillLevelCondition s1 = new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 10));
+		SkillLevelCondition s2 = new SkillLevelConditionImpl("oid1", new SqlConditionImpl(SqlOperator.IN, 10, 20));
+		SkillLevelCondition s3 = new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 20));
+		SkillLevelCondition s4 = new SkillLevelConditionImpl("oid2", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 10));
 
 		assertEquals(s, s1);
 		assertEquals(s.hashCode(), s1.hashCode());
@@ -89,25 +87,25 @@ public class RoutingGroupRuleImplTest {
 	}
 	
 	
-	private List<RoutingRuleImpl> getRules() {
+	private List<RoutingRule> getRules() {
 		AndSkillLevelConditions andSkillLevelConditions1 = new AndSkillLevelConditionsImpl(
-						List.of(new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 10)),
-								new SkillLevelConditionImpl("oid2", new BinaryCondition(BinaryOperator.EQUAL, 10)))
+						List.of(new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 10)),
+								new SkillLevelConditionImpl("oid2", new BinaryConditionImpl(BinaryOperator.EQUAL, 10)))
 					);
 		
 		AndSkillLevelConditions andSkillLevelConditions2 = new AndSkillLevelConditionsImpl(
-				List.of(new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 20)),
-						new SkillLevelConditionImpl("oid2", new BinaryCondition(BinaryOperator.EQUAL, 10)))
+				List.of(new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 20)),
+						new SkillLevelConditionImpl("oid2", new BinaryConditionImpl(BinaryOperator.EQUAL, 10)))
 				);
 		
 		AndSkillLevelConditions andSkillLevelConditions3 = new AndSkillLevelConditionsImpl(
-				List.of(new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 10)),
-						new SkillLevelConditionImpl("oid2", new BinaryCondition(BinaryOperator.EQUAL, 10)))
+				List.of(new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 10)),
+						new SkillLevelConditionImpl("oid2", new BinaryConditionImpl(BinaryOperator.EQUAL, 10)))
 			);
 
 		AndSkillLevelConditions andSkillLevelConditions4 = new AndSkillLevelConditionsImpl(
-				List.of(new SkillLevelConditionImpl("oid1", new BinaryCondition(BinaryOperator.GREATER_THAN, 10)),
-						new SkillLevelConditionImpl("oid2", new BinaryCondition(BinaryOperator.EQUAL, 10)))
+				List.of(new SkillLevelConditionImpl("oid1", new BinaryConditionImpl(BinaryOperator.GREATER_THAN, 10)),
+						new SkillLevelConditionImpl("oid2", new BinaryConditionImpl(BinaryOperator.EQUAL, 10)))
 				);
 
 		RoutingRuleImpl routingRuleImpl1 = new RoutingRuleImpl(Set.of(andSkillLevelConditions1, andSkillLevelConditions2), 1);

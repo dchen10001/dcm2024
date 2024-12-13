@@ -1,34 +1,38 @@
 package com.e2.wfm.gurobidemo.poisson;
 
-import org.apache.commons.math3.distribution.ExponentialDistribution;
+import java.util.Random;
+
+import org.apache.commons.math3.distribution.NormalDistribution;
 
 public class ExponentialGenerator {
     public static void main(String[] argv) {
-        double[] callVolumes = new double[] {1.5, 2.5, 3.5, 4.5};
-        double lambda = 0; // average number of events in a time period
-        for (double callVolume : callVolumes) {
-            lambda += callVolume;
-        }
-        //sample size
-        int size = (int)lambda;
-        
-        int totalSeconds = 900 * 4;
-        //
-        lambda = 0.2;
-        size = 20;
-        double[] arrivals = new double[size];
-
-        ExponentialDistribution exp = new ExponentialDistribution(lambda);
-        arrivals[0] = exp.sample();
-        for (int i = 1; i < size; i++) {
-            double del = exp.sample();
-            arrivals[i] = del + arrivals[i - 1];
-        }
-        
-        for (int i = 0; i < size; i++) {
-            double seconds = arrivals[i] * totalSeconds;
-            double minutes = seconds / 60;
-            System.out.println("i = " + i + " |"  + arrivals[i] + " | seconds=  " + seconds + "  | minutes = " + minutes);
-        }        
+    	int timeUnit = 900; // 15 minutes
+    	double callValue = 5; // 10 calls per time unit
+    	
+    	double lambda = 1 / callValue;
+    	
+    	//ExponentialDistribution exp = new ExponentialDistribution(lambda);
+    	
+    	NormalDistribution exp = new NormalDistribution(2, 1);
+    	int sampleSize = 100;
+    	double[] values = new double[sampleSize];
+    	double total = 0;
+    	for (int i = 0; i < sampleSize; i++) {
+    		values[i] = exp.sample();
+    		total += values[i];
+    	}
+    	
+    	double mean = total / sampleSize;
+    	double meanSquare = 0;
+    	
+		for (int i = 0; i < sampleSize; i++) {
+			meanSquare += Math.pow(values[i] - mean, 2);
+			System.out.println("values[" + i + "] = " + values[i]);
+		}
+    	
+		meanSquare = meanSquare / sampleSize;
+		double stdDev = Math.sqrt(meanSquare);
+		
+    	System.out.println("mean = " + mean + " stdDev = " + stdDev);    
     }
 }

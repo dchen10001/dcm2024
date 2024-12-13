@@ -36,7 +36,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>common-ext</artifactId>
+			<artifactId>distribution-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

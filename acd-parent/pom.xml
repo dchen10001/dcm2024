@@ -1,16 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.nice.dcm.simulation.acd</groupId>
 	<artifactId>acd-parent</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>acd-parent</name>
 	<url>http://maven.apache.org</url>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>17</maven.compiler.source>
@@ -21,12 +19,14 @@
 		<lombok.version>1.18.32</lombok.version>
 		<junit.jupiter.version>5.10.2</junit.jupiter.version>
 		<commons-lang3.version>3.14.0</commons-lang3.version>
+		<commons-math3.version>3.6.1</commons-math3.version>
+		<commons-rng-simple.version>1.6</commons-rng-simple.version>
+		<commons-statistics-distribution.version>1.1</commons-statistics-distribution.version>
 		<logback-classic.version>1.5.5</logback-classic.version>
 		<logger.version>2.23.1</logger.version>
 		<sl4j.version>2.0.13</sl4j.version>
 		<antlr4.version>4.13.1</antlr4.version>
 	</properties>
-
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -38,6 +38,23 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons-lang3.version}</version>
+			</dependency>
+			<!--				
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-math3</artifactId>
+				<version>${commons-math3.version}</version>
+			</dependency>
+			-->
+			<dependency>
+			    <groupId>org.apache.commons</groupId>
+			    <artifactId>commons-rng-simple</artifactId>
+			    <version>${commons-rng-simple.version}</version>
+			</dependency>			
+			<dependency>
+			    <groupId>org.apache.commons</groupId>
+			    <artifactId>commons-statistics-distribution</artifactId>
+			    <version>${commons-statistics-distribution.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.projectlombok</groupId>
@@ -136,6 +153,11 @@
 	</dependencies>
 	<modules>
 		<module>common-ext</module>
+		<module>common</module>
 		<module>distribution-rule</module>
+		<module>acd-router</module>
+		<module>distribution-ext</module>
+		<module>distribution-common</module>
+		<module>sample-generator</module>
 	</modules>
 </project>

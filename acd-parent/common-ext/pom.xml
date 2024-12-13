@@ -10,6 +10,13 @@
 	<artifactId>common-ext</artifactId>
 	<name>common-ext</name>
 	<build>
-		<finalName>core-simulation</finalName>
+		<finalName>common-ext</finalName>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>distribution-ext</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>	
 </project>

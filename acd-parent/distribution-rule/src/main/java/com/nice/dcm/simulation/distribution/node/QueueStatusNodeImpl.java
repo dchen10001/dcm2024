@@ -1,5 +1,7 @@
 package com.nice.dcm.simulation.distribution.node;
 
+import com.nice.dcm.simulation.distribution.rule.QueueStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,10 +17,6 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class QueueStatusNodeImpl implements Node {
-	public enum QueueStatus {
-		LEAST_BUSY;		
-	}
-	
 	private final QueueStatus queueStatus;
 	
 	@Override
