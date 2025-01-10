@@ -37,11 +37,7 @@ public class TimeEventServiceImpl implements EventService<TimeEvent> {
 	}
 	
 	@Override
-	public Future<Long> start() {
-        return executor.submit(this::run);
-	}
-
-	protected long run() {
+	public long start() {
 		long eventCount = 0;
 		while (true) {
 			TimeEvent e;

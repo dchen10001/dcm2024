@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.statistics.distribution.PoissonDistribution;
 import org.junit.jupiter.api.Test;
 
 import com.nice.dcm.sample.generation.input.CallVolumes;
@@ -18,6 +19,20 @@ class SequenceGeneratorImplTest {
 	
 	@Test
 	void test10Generate() {
+		double mean = 10.3;
+		PoissonDistribution poissonDistribution = PoissonDistribution.of(mean);
+		
+		double p1 = poissonDistribution.probability(14);
+		
+		for(int i = 1; i < 6; i++) {
+			int n = (int)mean - i;
+			double p = poissonDistribution.probability(n);
+			System.out.println("n: " + n + " p: " + p);
+			n = (int)mean + i;
+			p = poissonDistribution.probability(n);
+			System.out.println("n: " + n + " p: " + p);			
+		}
+		
         SequenceGeneratorImpl generator = new SequenceGeneratorImpl();
         
         long startTime = 0;

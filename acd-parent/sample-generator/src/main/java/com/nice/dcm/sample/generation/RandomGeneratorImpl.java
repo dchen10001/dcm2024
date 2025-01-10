@@ -1,7 +1,5 @@
 package com.nice.dcm.sample.generation;
 
-import java.util.stream.DoubleStream;
-
 import org.apache.commons.rng.UniformRandomProvider;
 import org.apache.commons.rng.simple.RandomSource;
 import org.apache.commons.statistics.distribution.ContinuousDistribution.Sampler;

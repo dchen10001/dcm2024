@@ -25,5 +25,5 @@ public interface EventService<E> {
      * @param currentTime
      * @return
      */
-    public Future<Long> start();
+    public long start();
 }
