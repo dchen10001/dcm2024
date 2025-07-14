@@ -13,7 +13,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gurobi.version>11.0.0</gurobi.version>
+        <gurobi.version>12.0.2</gurobi.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <jackson-datatype-jdk8.version>2.17.0</jackson-datatype-jdk8.version>
@@ -23,6 +23,7 @@
         <junit.jupiter.version>5.10.2</junit.jupiter.version>
         <commons-math3.version>3.6.1</commons-math3.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
+        <spring.boot.version>3.4.0</spring.boot.version>
     </properties>
 
     <dependencies>
@@ -106,66 +107,23 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <id>WINDOWS</id>
-            <activation>
-                <os>
-                    <family>windows</family>
-                </os>
-            </activation>
-            <properties>
-                <gurobi.classifier>win64</gurobi.classifier>
-                <gurobi.group>gurobi</gurobi.group>
-                <gurobi.artifact>gurobi-win64</gurobi.artifact>
-                <gurobi.type>zip</gurobi.type>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>gurobi</groupId>
-                    <artifactId>gurobi-win64</artifactId>
-                    <version>${gurobi.version}</version>
-                    <type>zip</type>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>Linux</id>
-            <activation>
-                <os>
-                    <name>linux</name>
-                    <family>unix</family>
-                    <arch>amd64</arch>
-                </os>
-            </activation>
-            <properties>
-                <gurobi.classifier>linux64</gurobi.classifier>
-                <gurobi.group>gurobi</gurobi.group>
-                <gurobi.artifact>gurobi-linux64</gurobi.artifact>
-                <gurobi.type>tar.gz</gurobi.type>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>gurobi</groupId>
-                    <artifactId>gurobi-linux64</artifactId>
-                    <version>${gurobi.version}</version>
-                    <type>tar.gz</type>
-                </dependency>
-            </dependencies>
-        </profile>
-        <profile>
-            <id>mac</id>
-            <activation>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <properties>
-                <gurobi.classifier>mac</gurobi.classifier>
-                <gurobi.group>com.gurobi</gurobi.group>
-                <gurobi.artifact>gurobi</gurobi.artifact>
-                <gurobi.type>jar</gurobi.type>
-            </properties>
-        </profile>
-    </profiles>
+     <build>
+     	<plugins>
+     		<plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <configuration>
+                    <mainClass>com.e2.wfm.gurobidemo.Lpmod</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+     	</plugins>
+     </build>
 </project>

@@ -12,6 +12,8 @@ import com.gurobi.gurobi.GRBVar;
 public class Lpmod {
 
     public static void main(String[] args) {
+    	System.out.println("================ start Lpmod ==============");
+    	
 	GRBEnv env = null;
 	GRBModel model = null;
         try {

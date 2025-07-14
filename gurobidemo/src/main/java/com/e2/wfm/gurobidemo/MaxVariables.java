@@ -2,6 +2,8 @@ package com.e2.wfm.gurobidemo;
 
 import static com.gurobi.gurobi.GRB.MINIMIZE;
 
+import java.util.Map;
+
 import com.gurobi.gurobi.GRB;
 import com.gurobi.gurobi.GRBConstr;
 import com.gurobi.gurobi.GRBEnv;
@@ -18,6 +20,8 @@ public class MaxVariables {
             // Create a new environment
 	    env = GurobiUtil.getGurobiEnvironment("lpmod.log");
 	    
+	    Map<String, String> map = System.getenv();
+	    System.out.println(System.getProperty("java.library.path"));
 	    // Create a new model
 	    model = new GRBModel(env);
 	    
