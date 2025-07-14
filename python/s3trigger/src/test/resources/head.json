@@ -1,0 +1,44 @@
+{
+  "ResponseMetadata" : {
+    "RequestId" : "V3MY00WPZGGKP3ZF",
+    "HostId" : "GXnZxoASxdSP43cqx1hqWjVrdx89kYlDc7rN7m8zlFFEnG/pR5bUwY3m9ok9lUlcryrhFilAslY=",
+    "HTTPStatusCode" : 200,
+    "HTTPHeaders" : {
+      "x-amz-id-2" : "GXnZxoASxdSP43cqx1hqWjVrdx89kYlDc7rN7m8zlFFEnG/pR5bUwY3m9ok9lUlcryrhFilAslY=",
+      "x-amz-request-id" : "V3MY00WPZGGKP3ZF",
+      "date" : "Fri, 11 Jul 2025 20:33:57 GMT",
+      "last-modified" : "Fri, 27 Jun 2025 18:06:59 GMT",
+      "x-amz-expiration" : "expiry-date=Mon, 28 Jul 2025 00:00:00 GMT, rule-id=DeleteNonProdFilesAfter30Days",
+      "etag" : "4b6d684652b33e89c1c3630e0be6d6d7",
+      "x-amz-server-side-encryption" : "aws:kms",
+      "x-amz-server-side-encryption-aws-kms-key-id" : "arn:aws:kms:us-west-2:625808405075:key/88be5399-2a03-4b12-a111-c125372ff396",
+      "x-amz-meta-job_type" : "Scheduling",
+      "x-amz-meta-batch_output_file_s3_url" : "dev-wfm-dcm-aws-batch-output-trigger/output/CXONE_IntegrationTestTenant/saas-dcm-batch/Solution_20240101-01-01-01d55ea49e-76ff-44a7-badc-74c44dda2c5d",
+      "x-amz-meta-job_id" : "d55ea49e-76ff-44a7-badc-74c44dda2c5d",
+      "x-amz-meta-submitter" : "dcm-batch-tester",
+      "x-amz-meta-file_type" : "CXONE_SCHEDULE_GENERATION",
+      "x-amz-meta-results_call_back_arn" : "arn:aws:sqs:us-west-2:625808405075:dcm-IT-consumer-5b5fae08-2f77-4fbb-92f4-3a8320da0c2a",
+      "accept-ranges" : "bytes",
+      "content-type" : "application/octet-stream",
+      "content-length" : "149852",
+      "server" : "AmazonS3"
+    },
+    "RetryAttempts" : 0
+  },
+  "AcceptRanges" : "bytes",
+  "Expiration" : "expiry-date=Mon, 28 Jul 2025 00:00:00 GMT, rule-id=DeleteNonProdFilesAfter30Days",
+  "LastModified" : "datetime.datetime(2025, 6, 27, 18, 6, 59, tzinfo=tzutc())",
+  "ContentLength" : 149852,
+  "ETag" : "4b6d684652b33e89c1c3630e0be6d6d7",
+  "ContentType" : "application/octet-stream",
+  "ServerSideEncryption" : "aws:kms",
+  "Metadata" : {
+    "job_type" : "Scheduling",
+    "batch_output_file_s3_url" : "dev-wfm-dcm-aws-batch-output-trigger/output/CXONE_IntegrationTestTenant/saas-dcm-batch/Solution_20240101-01-01-01d55ea49e-76ff-44a7-badc-74c44dda2c5d",
+    "job_id" : "d55ea49e-76ff-44a7-badc-74c44dda2c5d",
+    "submitter" : "dcm-batch-tester",
+    "file_type" : "CXONE_SCHEDULE_GENERATION",
+    "results_call_back_arn" : "arn:aws:sqs:us-west-2:625808405075:dcm-IT-consumer-5b5fae08-2f77-4fbb-92f4-3a8320da0c2a"
+  },
+  "SSEKMSKeyId" : "arn:aws:kms:us-west-2:625808405075:key/88be5399-2a03-4b12-a111-c125372ff396"
+}

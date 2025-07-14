@@ -1,0 +1,36 @@
+{
+  "Records" : [ {
+    "eventVersion" : "2.1",
+    "eventSource" : "aws:s3",
+    "awsRegion" : "us-west-2",
+    "eventTime" : "2024-08-27T00:07:45.352Z",
+    "eventName" : "ObjectCreated:Put",
+    "userIdentity" : {
+      "principalId" : "AWS:AIDAZDNIWOJJ4LCXUO6D4"
+    },
+    "requestParameters" : {
+      "sourceIPAddress" : "10.200.148.44"
+    },
+    "responseElements" : {
+      "x-amz-request-id" : "2YB7FQC3KWZH71C6",
+      "x-amz-id-2" : "gXMGtxtJ2GhZpvoQolwgfO+Svjt8H5u7u7v6ESmBYPp1lmzRsTRi26F8k49f6iBxiTpDpIeZypNUwuxq0xL69iGxDtfAvjFI"
+    },
+    "s3" : {
+      "s3SchemaVersion" : "1.0",
+      "configurationId" : "Y2ZjMjAyZjgtNjE5Mi00OWYzLThmNWUtMDY3MDIyNWQ0YjQ1",
+      "bucket" : {
+        "name" : "dev-wfm-dcm-aws-batch-input-trigger",
+        "ownerIdentity" : {
+          "principalId" : "A3VLFLY37WMHRD"
+        }   ,
+        "arn" : "arn:aws:s3:::dev-wfm-dcm-aws-batch-input-trigger"
+      },
+      "object" : {
+        "key" : "input/CXONE_PerformanceTestTenant/saas-dcm-simulation-batch/Problem_20240827-00-07-44simulation-DCMLT_2072-500Agents-10skills-15SKG-bullseye-constantVolume",
+        "size" : 2164886,
+        "eTag" : "8a09936a53eb75ecbb94d7b8185d6c4d",
+        "sequencer" : "0066CD18D10B348D2A"
+      }
+    }
+  } ]
+}
